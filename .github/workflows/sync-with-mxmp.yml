@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      - uses: actions/checkout@v4
+        with:
+          repository: punxaphil/maxi-media-player
+          token:  ${{ secrets.PAT_TOKEN }}
+          path: mxmp
+
+      - name: Update MXMP repository
+        run: |
+          cd mxmp
+          cp ../dist-maxi-media-player/README.md .
+          rm -rf img
+          mkdir img
+          cp ../img/* img/
+          diff=$(git diff)
+          if [ ! -z "$diff" ]
+          then 
+            git config user.name "Johan Frick"
+            git config user.email "johan.frick@gmail.com"
+            git commit -am"updated README.md"
+            git push origin main
+          fi
+          

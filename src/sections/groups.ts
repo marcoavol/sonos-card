@@ -14,13 +14,13 @@ export class Groups extends LitElement {
     return html`
       <mwc-list activatable class="list">
         ${this.store.allGroups
-          .sort((a, b) => {
-            if (a.id === this.activePlayerId) return -1;
-            if (b.id === this.activePlayerId) return 1;
-            if (a.isPlaying()) return -1;
-            if (b.isPlaying()) return 1;
-            return 0;
-          })
+          //   .sort((a, b) => {
+          //     if (a.id === this.activePlayerId) return -1;
+          //     if (b.id === this.activePlayerId) return 1;
+          //     if (a.isPlaying()) return -1;
+          //     if (b.isPlaying()) return 1;
+          //     return 0;
+          //   })
           .map((group) => html` <sonos-group .store=${this.store} .player=${group}></sonos-group> `)}
       </mwc-list>
     `;

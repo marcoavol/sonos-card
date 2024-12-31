@@ -5,7 +5,6 @@ import { CardConfig, MediaPlayerItem } from '../types';
 import { customEvent } from '../utils/utils';
 import { MEDIA_ITEM_SELECTED, mediaItemTitleStyle } from '../constants';
 import { itemsWithFallbacks, renderMediaBrowserItem } from '../utils/media-browser-utils';
-import { styleMap } from 'lit-html/directives/style-map.js';
 
 export class MediaBrowserIcons extends LitElement {
   @property({ attribute: false }) store!: Store;
@@ -14,15 +13,13 @@ export class MediaBrowserIcons extends LitElement {
 
   render() {
     this.config = this.store.config;
+    const itemsPerRow = this.config.favoritesItemsPerRow || 4;
 
     return html`
-      <div class="icons">
+      <div class="icons" style="--items-per-row: ${itemsPerRow}">
         ${itemsWithFallbacks(this.items, this.config).map(
           (item) => html`
-            <ha-control-button
-              style=${this.buttonStyle(this.config.favoritesItemsPerRow || 4)}
-              @click=${() => this.dispatchEvent(customEvent(MEDIA_ITEM_SELECTED, item))}
-            >
+            <ha-control-button @click=${() => this.dispatchEvent(customEvent(MEDIA_ITEM_SELECTED, item))}>
               ${renderMediaBrowserItem(item, !item.thumbnail || !this.config.favoritesHideTitleForThumbnailIcons)}
             </ha-control-button>
           `,
@@ -31,24 +28,21 @@ export class MediaBrowserIcons extends LitElement {
     `;
   }
 
-  private buttonStyle(favoritesItemsPerRow: number) {
-    const margin = '1%';
-    const size = `calc(100% / ${favoritesItemsPerRow} - ${margin} * 2)`;
-    return styleMap({
-      width: size,
-      height: size,
-      margin: margin,
-    });
-  }
-
   static get styles() {
     return [
       mediaItemTitleStyle,
       css`
         .icons {
-          display: flex;
-          flex-wrap: wrap;
-          padding: 1rem;
+          display: grid;
+          grid-template-columns: repeat(var(--items-per-row, 4), 1fr);
+          grid-auto-rows: 1fr;
+          gap: 1rem;
+        }
+
+        ha-control-button {
+          width: 100%;
+          height: 100%;
+          display: block;
         }
 
         .thumbnail {

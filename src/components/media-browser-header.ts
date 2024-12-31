@@ -8,7 +8,9 @@ class MediaBrowserHeader extends LitElement {
 
   render() {
     return html`
-      <div class="title">${this.store.config.mediaBrowserTitle ?? 'All Favorites'}</div>
+      <div class="title ${this.store.config.hideBrowseMediaButton ? 'center' : ''}">
+        ${this.store.config.mediaBrowserTitle ?? 'All Favorites'}
+      </div>
       <sonos-ha-player
         hide=${this.store.config.hideBrowseMediaButton || nothing}
         .store=${this.store}
@@ -22,17 +24,17 @@ class MediaBrowserHeader extends LitElement {
       :host {
         display: flex;
         justify-content: space-between;
-        padding: 0.5rem;
       }
       .title {
-        flex: 1;
-        text-align: center;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: bold;
         display: flex;
         align-items: center;
-        justify-content: center;
         padding: 0.5rem;
+      }
+      .title.center {
+        width: 100%;
+        justify-content: center;
       }
       *[hide] {
         display: none;

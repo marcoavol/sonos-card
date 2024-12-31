@@ -105,6 +105,15 @@ export class MediaBrowser extends LitElement {
 
   static get styles() {
     return css`
+      :host {
+        display: block;
+        padding: 1rem;
+      }
+
+      sonos-media-browser-header {
+        margin-bottom: 1rem;
+      }
+
       .no-items {
         text-align: center;
         margin-top: 50%;

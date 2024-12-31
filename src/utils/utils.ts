@@ -24,6 +24,11 @@ export function getSpeakerList(mainPlayer: MediaPlayer, predefinedGroups: Predef
 }
 
 export function dispatchActivePlayerId(playerId: string, config: CardConfig, element: Element) {
+  if (window.history && window.location.href) {
+    const baseUrl = window.location.href.split('#')[0];
+    window.history.replaceState(null, '', `${baseUrl}#${playerId}`);
+  }
+
   if (cardDoesNotContainAllSections(config)) {
     dispatch(ACTIVE_PLAYER_EVENT, { entityId: playerId });
   } else {

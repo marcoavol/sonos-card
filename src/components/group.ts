@@ -139,7 +139,8 @@ class Group extends LitElement {
 
       .song-title {
         font-size: 0.9rem;
-        font-weight: bold;
+        font-style: italic;
+        color: var(--secondary-text-color);
       }
 
       .icons {

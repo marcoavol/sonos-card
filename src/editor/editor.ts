@@ -70,6 +70,10 @@ class CardEditor extends BaseEditor {
 
   static get styles() {
     return css`
+      ha-control-button-group {
+        margin-bottom: 1rem;
+      }
+
       ha-control-button[selected] {
         --control-button-background-color: var(--primary-color);
       }

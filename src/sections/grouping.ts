@@ -9,6 +9,7 @@ import { MediaPlayer } from '../model/media-player';
 import '../components/grouping-button';
 import { CardConfig, PredefinedGroup, PredefinedGroupPlayer } from '../types';
 import { GroupingItem } from '../model/grouping-item';
+import { mdiVolumeMinus, mdiVolumePlus } from '@mdi/js';
 
 export class Grouping extends LitElement {
   @property({ attribute: false }) store!: Store;
@@ -52,13 +53,25 @@ export class Grouping extends LitElement {
                 ></ha-icon>
                 <div class="name-and-volume">
                   <span class="name">${item.name}</span>
-                  <sonos-volume
-                    class="volume"
-                    .store=${this.store}
-                    .player=${item.player}
-                    .updateMembers=${false}
-                    .slim=${true}
-                  ></sonos-volume>
+                  <div class="volume-row">
+                    <ha-icon-button
+                      .disabled=${item.player.ignoreVolume}
+                      @click=${() => this.mediaControlService.volumeDown(item.player, false)}
+                      .path=${mdiVolumeMinus}
+                    ></ha-icon-button>
+                    <sonos-volume
+                      class="volume"
+                      .store=${this.store}
+                      .player=${item.player}
+                      .updateMembers=${false}
+                      .slim=${true}
+                    ></sonos-volume>
+                    <ha-icon-button
+                      .disabled=${item.player.ignoreVolume}
+                      @click=${() => this.mediaControlService.volumeUp(item.player, false)}
+                      .path=${mdiVolumePlus}
+                    ></ha-icon-button>
+                  </div>
                 </div>
               </div>
             `;
@@ -166,8 +179,12 @@ export class Grouping extends LitElement {
             font-size: 1.1rem;
           }
         }
-
+        .volume-row {
+          display: flex;
+          align-items: center;
+        }
         .volume {
+          flex: 1;
           --accent-color: var(--secondary-text-color);
         }
       `,

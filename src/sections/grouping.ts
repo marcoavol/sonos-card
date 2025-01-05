@@ -45,22 +45,21 @@ export class Grouping extends LitElement {
           ${this.groupingItems.map((item) => {
             return html`
               <div class="item" modified=${item.isModified || nothing} disabled=${item.isDisabled || nothing}>
-                <ha-icon
-                  class="icon"
-                  selected=${item.isSelected || nothing}
-                  .icon="mdi:${item.icon}"
-                  @click=${() => this.toggleItem(item)}
-                ></ha-icon>
-                <div class="name-and-volume">
-                  <span class="name">${item.name}</span>
-                  <div class="volume-row">
+                <div class="name">${item.name}</div>
+                <div class="selected-volume">
+                  <ha-icon
+                    class="selected-icon"
+                    selected=${item.isSelected || nothing}
+                    .icon="mdi:${item.icon}"
+                    @click=${() => this.toggleItem(item)}
+                  ></ha-icon>
+                  <div class="volume">
                     <ha-icon-button
                       .disabled=${item.player.ignoreVolume}
                       @click=${() => this.mediaControlService.volumeDown(item.player, false)}
                       .path=${mdiVolumeMinus}
                     ></ha-icon-button>
                     <sonos-volume
-                      class="volume"
                       .store=${this.store}
                       .player=${item.player}
                       .updateMembers=${false}
@@ -115,7 +114,7 @@ export class Grouping extends LitElement {
         .item {
           color: var(--secondary-text-color);
           display: flex;
-          align-items: flex-end;
+          flex-direction: column;
           padding: 0.5rem 1rem;
         }
 
@@ -127,26 +126,45 @@ export class Grouping extends LitElement {
           border-top: solid var(--secondary-background-color) !important;
         }
 
-        .item[modified] .name {
-          font-weight: bold;
-          font-style: italic;
-        }
-
-        .item[disabled] .icon {
+        .item[disabled] .selected-icon {
           color: var(--disabled-text-color);
         }
 
-        .icon {
-          padding: 0.5rem 0.5rem 0.75rem 0;
+        .name {
+          width: 100%;
+          text-align: center;
+          font-weight: bold;
+          font-size: 1.1rem;
+        }
+
+        .selected-icon {
+          padding: 0.5rem;
           flex-shrink: 0;
         }
 
-        .icon[selected] {
+        .selected-icon[selected] {
           color: var(--accent-color);
         }
 
-        .icon[selected] ~ .name-and-volume sonos-volume {
+        .selected-icon[selected] ~ .volume sonos-volume {
           --accent-color: unset !important;
+        }
+
+        .selected-volume {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .volume {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+
+        sonos-volume {
+          flex: 1;
+          --accent-color: var(--secondary-text-color);
         }
 
         .list {
@@ -166,26 +184,6 @@ export class Grouping extends LitElement {
 
         *[hide] {
           display: none;
-        }
-
-        .name-and-volume {
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-
-          .name {
-            align-self: center !important;
-            font-weight: bold;
-            font-size: 1.1rem;
-          }
-        }
-        .volume-row {
-          display: flex;
-          align-items: center;
-        }
-        .volume {
-          flex: 1;
-          --accent-color: var(--secondary-text-color);
         }
       `,
     ];

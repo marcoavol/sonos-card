@@ -86,7 +86,6 @@ export interface CardConfig extends LovelaceCardConfig {
   entitiesToIgnoreVolumeLevelFor?: string[];
   replaceHttpWithHttpsForThumbnails?: boolean;
   volumeStepSize?: number;
-  mediaBrowserTitle?: string; // TODO: remove
   queueTitle?: string;
   adjustVolumeRelativeToMainPlayer?: boolean;
   skipApplyButtonWhenGrouping?: boolean;

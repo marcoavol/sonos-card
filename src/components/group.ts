@@ -117,9 +117,6 @@ class Group extends LitElement {
       mwc-list-item[activated] {
         --mdc-ripple-color: var(--accent-color);
         .speakers {
-          color: var(--primary-text-color);
-        }
-        .song-title {
           color: var(--accent-color);
         }
       }

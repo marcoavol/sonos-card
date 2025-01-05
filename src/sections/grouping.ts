@@ -133,7 +133,7 @@ export class Grouping extends LitElement {
         }
 
         .item[selected] .name {
-          color: var(--primary-text-color);
+          color: var(--accent-color);
         }
 
         .item[selected] sonos-volume {

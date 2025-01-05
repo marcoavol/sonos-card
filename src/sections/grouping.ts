@@ -153,7 +153,6 @@ export class Grouping extends LitElement {
         .selected-volume {
           display: flex;
           align-items: center;
-          gap: 8px;
         }
 
         .volume {

@@ -16,6 +16,6 @@ export class GroupingItem {
     this.isSelected = isModified ? !currentlyJoined : currentlyJoined;
     this.player = player;
     this.name = player.name;
-    this.icon = this.isSelected ? 'check-circle' : 'checkbox-blank-circle-outline';
+    this.icon = this.isSelected ? 'checkbox-outline' : 'checkbox-blank-outline';
   }
 }

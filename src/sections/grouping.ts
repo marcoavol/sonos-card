@@ -44,15 +44,14 @@ export class Grouping extends LitElement {
         <div class="list">
           ${this.groupingItems.map((item) => {
             return html`
-              <div class="item" modified=${item.isModified || nothing} disabled=${item.isDisabled || nothing}>
+              <div
+                class="item"
+                modified=${item.isModified || nothing}
+                disabled=${item.isDisabled || nothing}
+                selected=${item.isSelected || nothing}
+              >
                 <div class="name">${item.name}</div>
                 <div class="selected-volume">
-                  <ha-icon
-                    class="selected-icon"
-                    selected=${item.isSelected || nothing}
-                    .icon="mdi:${item.icon}"
-                    @click=${() => this.toggleItem(item)}
-                  ></ha-icon>
                   <div class="volume">
                     <ha-icon-button
                       .disabled=${item.player.ignoreVolume}
@@ -71,6 +70,12 @@ export class Grouping extends LitElement {
                       .path=${mdiVolumePlus}
                     ></ha-icon-button>
                   </div>
+                  <ha-icon
+                    class="selected-icon"
+                    selected=${item.isSelected || nothing}
+                    .icon="mdi:${item.icon}"
+                    @click=${() => this.toggleItem(item)}
+                  ></ha-icon>
                 </div>
               </div>
             `;
@@ -93,9 +98,6 @@ export class Grouping extends LitElement {
     return [
       listStyle,
       css`
-        :host {
-          --mdc-icon-size: 24px;
-        }
         .wrapper {
           display: flex;
           flex-direction: column;
@@ -127,7 +129,15 @@ export class Grouping extends LitElement {
         }
 
         .item[disabled] .selected-icon {
-          color: var(--disabled-text-color);
+          opacity: 0.5;
+        }
+
+        .item[selected] .name {
+          color: var(--primary-text-color);
+        }
+
+        .item[selected] sonos-volume {
+          --accent-color: unset !important;
         }
 
         .name {
@@ -144,10 +154,6 @@ export class Grouping extends LitElement {
 
         .selected-icon[selected] {
           color: var(--accent-color);
-        }
-
-        .selected-icon[selected] ~ .volume sonos-volume {
-          --accent-color: unset !important;
         }
 
         .selected-volume {

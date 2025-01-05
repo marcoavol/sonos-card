@@ -66,10 +66,12 @@ export class MediaPlayer {
   }
 
   private createGroupMembers(mainHassEntity: HassEntity, mediaPlayerHassEntities: HassEntity[]): MediaPlayer[] {
-    return getGroupPlayerIds(mainHassEntity).reduce((players: MediaPlayer[], id) => {
-      const hassEntity = mediaPlayerHassEntities.find((hassEntity) => hassEntity.entity_id === id);
-      return hassEntity ? [...players, new MediaPlayer(hassEntity, this.config)] : players;
-    }, []);
+    return getGroupPlayerIds(mainHassEntity)
+      .reduce((players: MediaPlayer[], id) => {
+        const hassEntity = mediaPlayerHassEntities.find((hassEntity) => hassEntity.entity_id === id);
+        return hassEntity ? [...players, new MediaPlayer(hassEntity, this.config)] : players;
+      }, [])
+      .sort((a, b) => a.id.localeCompare(b.id));
   }
 
   private determineVolumePlayer() {

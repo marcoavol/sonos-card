@@ -105,7 +105,7 @@ export class Volumes extends LitElement {
       .row {
         display: flex;
         flex-direction: column;
-        padding: 0.5rem;
+        padding: 1rem;
       }
 
       .row:first-child {
@@ -122,7 +122,7 @@ export class Volumes extends LitElement {
         flex-direction: column;
         gap: 1rem;
         overflow: hidden;
-        padding: 0.5rem 0.5rem 0.5rem 0;
+        padding: 0 0.5rem 0 0;
       }
 
       .volume-name {

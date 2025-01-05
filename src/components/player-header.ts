@@ -50,7 +50,7 @@ class PlayerHeader extends LitElement {
       .entity {
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 500;
         color: var(--secondary-text-color);
         white-space: nowrap;
@@ -59,7 +59,7 @@ class PlayerHeader extends LitElement {
       .song {
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 1.15rem;
+        font-size: 1.2rem;
         font-weight: 400;
         color: var(--accent-color);
       }

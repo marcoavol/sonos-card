@@ -53,10 +53,6 @@ export const ADVANCED_SCHEMA = [
     type: 'string',
   },
   {
-    name: 'mediaBrowserTitle',
-    type: 'string',
-  },
-  {
     name: 'queueTitle',
     type: 'string',
     cardType: 'sonos',
@@ -185,6 +181,7 @@ class AdvancedEditor extends BaseEditor {
           <li>favoritesToIgnore</li>
           <li>groupingButtonIcons</li>
           <li>sectionButtonIcons</li>
+          <li>mediaBrowserTitleButton</li>
         </ul>
       </div>
     `;

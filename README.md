@@ -228,7 +228,7 @@ topFavorites: # Show these favorites at the top of the list
 numberOfFavoritesToShow: 10 # Use this to limit the amount of favorites to show
 hideBrowseMediaButton: true # default is false. Hides the button to open the media browser.
 replaceHttpWithHttpsForThumbnails: true # default is false. Use this if you  want to replace http with https for thumbnails. 
-mediaBrowserTitle: My favorites # default is 'All favorites'. Use this to change the title for the media browser/favorites section.
+mediaBrowserTitleButton: My favorites # default is 'Favorites' (text only). You can customize the title in the media browser section to include an icon and/or a tap action using the `mediaBrowserTitleButton` configuration. Example: mediaBrowserTitleButton: { text: 'Sonos', icon: 'mdi:open-in-new', tap_action: { action: 'url', url_path: 'sonos://' } }.
 
 # volumes specific
 hideVolumeCogwheel: true # default is false. Will hide the cogwheel for the volumes section.

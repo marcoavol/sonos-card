@@ -1,5 +1,15 @@
 import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
 import { MediaPlayer } from './model/media-player';
+import {
+  ToggleMenuActionConfig,
+  ToggleActionConfig,
+  CallServiceActionConfig,
+  NavigateActionConfig,
+  UrlActionConfig,
+  MoreInfoActionConfig,
+  NoActionConfig,
+  CustomActionConfig,
+} from 'custom-card-helpers/dist/types';
 
 declare global {
   // noinspection JSUnusedGlobalSymbols
@@ -76,7 +86,7 @@ export interface CardConfig extends LovelaceCardConfig {
   entitiesToIgnoreVolumeLevelFor?: string[];
   replaceHttpWithHttpsForThumbnails?: boolean;
   volumeStepSize?: number;
-  mediaBrowserTitle?: string;
+  mediaBrowserTitle?: string; // TODO: remove
   queueTitle?: string;
   adjustVolumeRelativeToMainPlayer?: boolean;
   skipApplyButtonWhenGrouping?: boolean;
@@ -100,6 +110,7 @@ export interface CardConfig extends LovelaceCardConfig {
   mediaTitleRegexToReplace?: string;
   mediaTitleReplacement?: string;
   stopInsteadOfPause?: boolean;
+  mediaBrowserTitleButton?: MediaBrowserTitleButtonConfig;
 }
 
 export interface MediaArtworkOverride {
@@ -197,4 +208,18 @@ export interface QueueItem {
   media_album_name: string;
   media_artist: string;
   media_content_id: string;
+}
+
+export interface MediaBrowserTitleButtonConfig {
+  icon?: string;
+  text?: string;
+  tap_action?:
+    | ToggleMenuActionConfig
+    | ToggleActionConfig
+    | CallServiceActionConfig
+    | NavigateActionConfig
+    | UrlActionConfig
+    | MoreInfoActionConfig
+    | NoActionConfig
+    | CustomActionConfig;
 }

@@ -29,5 +29,5 @@ jobs:
         with:
           body: ${{steps.build_changelog.outputs.changelog}}
           prerelease: true
-          files: "${GITHUB_WORKSPACE}/dist/custom-sonos-card.js"
+          files: "${GITHUB_WORKSPACE}/dist/sonos-card.js"
 

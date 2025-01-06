@@ -10,7 +10,7 @@ export default defineConfig({
       input: 'src/main.ts',
 
       output: {
-        entryFileNames: 'custom-sonos-card.js',
+        entryFileNames: 'sonos-card.js',
       },
     },
   },

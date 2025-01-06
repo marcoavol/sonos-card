@@ -262,9 +262,11 @@ export class Card extends LitElement {
         --mdc-icon-button-size: 3rem;
         --mdc-icon-size: 2rem;
       }
+
       ha-circular-progress {
         --md-sys-color-primary: var(--accent-color);
       }
+
       .loader {
         position: absolute;
         z-index: 1000;
@@ -273,6 +275,7 @@ export class Card extends LitElement {
         transform: translate(-50%, -50%);
         --mdc-theme-primary: var(--accent-color);
       }
+
       .title {
         margin: 0.4rem 0;
         text-align: center;
@@ -280,6 +283,7 @@ export class Card extends LitElement {
         font-size: 1.2rem;
         color: var(--secondary-text-color);
       }
+
       .no-players {
         text-align: center;
         margin-top: 50%;

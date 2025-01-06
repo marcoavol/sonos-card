@@ -1,5 +1,5 @@
 {
-  "name": "custom-sonos-card",
+  "name": "sonos-card",
   "version": "",
   "description": "",
   "main": "src/main.js",
@@ -29,8 +29,8 @@
   },
   "scripts": {
     "build": "npm run lint -- --fix && vite build",
-    "local-deploy": "npm run build && scp -P 2222 dist/custom-sonos-card.js root@192.168.1.26:/config/www/community/custom-sonos-card/custom-sonos-card.js",
-    "local-deploy-vpn": "npm run build && scp -P 2222 dist/custom-sonos-card.js root@10.243.31.151:/config/www/community/custom-sonos-card/custom-sonos-card.js",
+    "local-deploy": "npm run build && ssh -p 2222 root@192.168.1.26 'mkdir -p /config/www/community/sonos-card/' && scp -P 2222 dist/sonos-card.js root@192.168.1.26:/config/www/community/sonos-card/sonos-card.js",
+    "local-deploy-vpn": "npm run build && ssh -p 2222 root@10.243.31.151 'mkdir -p /config/www/community/sonos-card/' && scp -P 2222 dist/sonos-card.js root@10.243.31.151:/config/www/community/sonos-card/sonos-card.js",
     "lint": "eslint src test",
     "test": "vitest",
     "test:ci": "vitest run"

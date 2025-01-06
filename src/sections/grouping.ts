@@ -220,7 +220,11 @@ export class Grouping extends LitElement {
     this.selectedPredefinedGroup = undefined;
 
     if (join.length > 0) {
+<<<<<<< HEAD
       await this.mediaControlService.join(activePlayerId, join);
+=======
+      await this.mediaControlService.join(newMainPlayer, join);
+>>>>>>> 2676c717c669fbb308f9d667f7f5aeca16a8665e
     }
     if (unJoin.length > 0) {
       await this.mediaControlService.unJoin(unJoin);
@@ -249,13 +253,6 @@ export class Grouping extends LitElement {
     if (selectedItems.length === 1) {
       selectedItems[0].isDisabled = true;
     }
-    // groupingItems.sort((a, b) => {
-    //   if ((a.isMain && !b.isMain) || (a.isSelected && !b.isSelected)) {
-    //     return -1;
-    //   }
-    //   return 0;
-    // });
-
     return groupingItems;
   }
 

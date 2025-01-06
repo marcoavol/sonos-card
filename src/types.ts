@@ -1,15 +1,5 @@
-import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
+import { ActionConfig, HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
 import { MediaPlayer } from './model/media-player';
-import {
-  ToggleMenuActionConfig,
-  ToggleActionConfig,
-  CallServiceActionConfig,
-  NavigateActionConfig,
-  UrlActionConfig,
-  MoreInfoActionConfig,
-  NoActionConfig,
-  CustomActionConfig,
-} from 'custom-card-helpers/dist/types';
 
 declare global {
   // noinspection JSUnusedGlobalSymbols
@@ -109,6 +99,7 @@ export interface CardConfig extends LovelaceCardConfig {
   mediaTitleRegexToReplace?: string;
   mediaTitleReplacement?: string;
   stopInsteadOfPause?: boolean;
+  inverseGroupMuteState?: boolean;
   mediaBrowserTitleButton?: MediaBrowserTitleButtonConfig;
 }
 
@@ -137,6 +128,8 @@ export interface CustomFavoriteThumbnails {
 }
 
 export interface MediaPlayerItem {
+  can_play?: boolean;
+  can_expand?: boolean;
   title: string;
   thumbnail?: string;
   children?: MediaPlayerItem[];
@@ -212,13 +205,5 @@ export interface QueueItem {
 export interface MediaBrowserTitleButtonConfig {
   icon?: string;
   text?: string;
-  tap_action?:
-    | ToggleMenuActionConfig
-    | ToggleActionConfig
-    | CallServiceActionConfig
-    | NavigateActionConfig
-    | UrlActionConfig
-    | MoreInfoActionConfig
-    | NoActionConfig
-    | CustomActionConfig;
+  tap_action?: ActionConfig;
 }

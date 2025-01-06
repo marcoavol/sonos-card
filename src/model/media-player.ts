@@ -35,8 +35,15 @@ export class MediaPlayer {
     return this.state === 'playing';
   }
 
-  isMuted(checkMembers: boolean): boolean {
-    return this.attributes.is_volume_muted && (!checkMembers || this.members.every((member) => member.isMuted(false)));
+  isMemberMuted() {
+    return this.attributes.is_volume_muted;
+  }
+
+  isGroupMuted(): boolean {
+    if (this.config.inverseGroupMuteState) {
+      return this.members.some((member) => member.isMemberMuted());
+    }
+    return this.members.every((member) => member.isMemberMuted());
   }
 
   getCurrentTrack() {

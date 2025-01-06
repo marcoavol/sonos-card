@@ -35,7 +35,7 @@ function getThumbnail(mediaItem: MediaPlayerItem, config: CardConfig, itemsWithI
 }
 
 function removeSpecialChars(str: string) {
-  return str.replace(/[^a-zA-Z ]/g, '');
+  return str.replace(/[^a-zA-Z0-9 ]/g, '');
 }
 
 export function indexOfWithoutSpecialChars(array: string[], str: string) {
@@ -46,6 +46,10 @@ export function indexOfWithoutSpecialChars(array: string[], str: string) {
     }
   });
   return result;
+}
+
+export function stringContainsAnyItemInArray(array: string[], str: string) {
+  return !!array.find((value) => str.includes(value));
 }
 
 export function itemsWithFallbacks(mediaPlayerItems: MediaPlayerItem[], config: CardConfig) {

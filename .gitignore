@@ -1,9 +1,9 @@
-todo.mkd
 .idea
+.vscode/
 dist*/
 .DS_Store
 package-lock.json
 node_modules/
 coverage/
 lcov-report/
-.vscode/
+todo.mkd

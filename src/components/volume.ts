@@ -22,7 +22,8 @@ class Volume extends LitElement {
     const volume = this.player.getVolume();
     const max = this.getMax(volume);
 
-    const muteIcon = this.player.isMuted(this.updateMembers) ? mdiVolumeMute : mdiVolumeHigh;
+    const isMuted = this.updateMembers ? this.player.isGroupMuted() : this.player.isMemberMuted();
+    const muteIcon = isMuted ? mdiVolumeMute : mdiVolumeHigh;
     const disabled = this.player.ignoreVolume;
 
     return html`
@@ -90,7 +91,6 @@ class Volume extends LitElement {
       .volume {
         display: flex;
         flex: 1;
-        padding: 7px 0;
       }
 
       .volume-slider {

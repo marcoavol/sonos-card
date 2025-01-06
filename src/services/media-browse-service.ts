@@ -1,7 +1,7 @@
 import { CardConfig, MediaPlayerItem } from '../types';
 import HassService from './hass-service';
 import { MediaPlayer } from '../model/media-player';
-import { indexOfWithoutSpecialChars } from '../utils/media-browser-utils';
+import { stringContainsAnyItemInArray } from '../utils/media-browser-utils';
 
 export default class MediaBrowseService {
   private hassService: HassService;
@@ -20,9 +20,12 @@ export default class MediaBrowseService {
     favorites = favorites.flatMap((f) => f);
     favorites = this.removeDuplicates(favorites);
     favorites = favorites.length ? favorites : this.getFavoritesFromStates(player);
-    return favorites.filter(
-      (item) => indexOfWithoutSpecialChars(this.config.favoritesToIgnore ?? [], item.title) === -1,
-    );
+    const favoritesToIgnore = this.config.favoritesToIgnore ?? [];
+    return favorites.filter((item) => {
+      const titleNotIgnored = !stringContainsAnyItemInArray(favoritesToIgnore, item.title);
+      const contentIdNotIgnored = !stringContainsAnyItemInArray(favoritesToIgnore, item.media_content_id ?? '');
+      return titleNotIgnored && contentIdNotIgnored;
+    });
   }
 
   private removeDuplicates(items: MediaPlayerItem[]) {
@@ -32,16 +35,34 @@ export default class MediaBrowseService {
   }
 
   private async getFavoritesForPlayer(player: MediaPlayer) {
-    try {
-      const favoritesRoot = await this.hassService.browseMedia(player, 'favorites', '');
-      const favoriteTypesPromise = favoritesRoot.children?.map((favoriteItem) =>
-        this.hassService.browseMedia(player, favoriteItem.media_content_type, favoriteItem.media_content_id),
-      );
-      const favoriteTypes = favoriteTypesPromise ? await Promise.all(favoriteTypesPromise) : [];
-      return favoriteTypes.flatMap((item) => item.children ?? []);
-    } catch (e) {
-      console.error(`Sonos Card: error getting favorites for player ${player.id}: ${JSON.stringify(e)}`);
+    const mediaRoot = await this.hassService.browseMedia(player);
+    const favoritesStr = 'favorites';
+    const favoritesDir = mediaRoot.children?.find(
+      (child) =>
+        child.media_content_type?.toLowerCase() === favoritesStr ||
+        child.media_content_id?.toLowerCase() === favoritesStr ||
+        child.title.toLowerCase() === favoritesStr,
+    );
+    if (!favoritesDir) {
       return [];
+    }
+    const favorites: MediaPlayerItem[] = [];
+    await this.browseDir(player, favoritesDir, favorites);
+    return favorites;
+  }
+
+  private async browseDir(player: MediaPlayer, favoritesDir: MediaPlayerItem, favorites: MediaPlayerItem[]) {
+    const dir = await this.hassService.browseMedia(
+      player,
+      favoritesDir.media_content_type,
+      favoritesDir.media_content_id,
+    );
+    for (const child of dir.children ?? []) {
+      if (child.can_play) {
+        favorites.push(child);
+      } else if (child.can_expand) {
+        await this.browseDir(player, child, favorites);
+      }
     }
   }
 

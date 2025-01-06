@@ -42,6 +42,11 @@ export const ENTITIES_SCHEMA = [
     cardType: 'sonos',
     selector: { boolean: {} },
   },
+  {
+    name: 'entityPlatform',
+    help: 'Show all media players for the selected platform',
+    type: 'string',
+  },
 ];
 
 class EntitiesEditor extends BaseEditor {

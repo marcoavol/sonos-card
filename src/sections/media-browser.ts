@@ -31,30 +31,35 @@ export class MediaBrowser extends LitElement {
 
       ${this.activePlayer &&
       until(
-        this.getFavorites(this.activePlayer).then((items) => {
-          if (items?.length) {
-            const itemsPerRow = this.config.favoritesItemsPerRow || 4;
-            if (itemsPerRow > 1) {
-              return html`
-                <sonos-media-browser-icons
-                  .items=${items}
-                  .store=${this.store}
-                  @item-selected=${this.onMediaItemSelected}
-                ></sonos-media-browser-icons>
-              `;
+        this.getFavorites(this.activePlayer)
+          .then((items) => {
+            if (items?.length) {
+              const itemsPerRow = this.config.favoritesItemsPerRow || 4;
+              if (itemsPerRow > 1) {
+                return html`
+                  <sonos-media-browser-icons
+                    .items=${items}
+                    .store=${this.store}
+                    @item-selected=${this.onMediaItemSelected}
+                  ></sonos-media-browser-icons>
+                `;
+              } else {
+                return html`
+                  <sonos-media-browser-list
+                    .items=${items}
+                    .store=${this.store}
+                    @item-selected=${this.onMediaItemSelected}
+                  ></sonos-media-browser-list>
+                `;
+              }
             } else {
-              return html`
-                <sonos-media-browser-list
-                  .items=${items}
-                  .store=${this.store}
-                  @item-selected=${this.onMediaItemSelected}
-                ></sonos-media-browser-list>
-              `;
+              return html`<div class="no-items">No favorites found</div>`;
             }
-          } else {
-            return html`<div class="no-items">No favorites found</div>`;
-          }
-        }),
+          })
+          .catch(
+            (e) =>
+              html`<div class="no-items">Failed to fetch list of favorites. ${e.message ?? JSON.stringify(e)}</div>`,
+          ),
       )}
     `;
   }

@@ -10,7 +10,7 @@ describe('MediaPlayer', () => {
   let config: CardConfig;
   let mediaPlayer: MediaPlayer;
 
-  beforeEach(() => {
+  function initMediaPlayer(groupSize: number, inverseGroupMuteState = false) {
     hassEntity1 = {
       entity_id: 'media_player.first',
       state: 'playing',
@@ -21,7 +21,7 @@ describe('MediaPlayer', () => {
         media_title: 'Title',
         media_content_id: 'http://example.com',
         volume_level: 0.5,
-        group_members: ['media_player.first'],
+        group_members: ['media_player.first', 'media_player.second'],
       },
     } as unknown as HassEntity;
     hassEntity2 = {
@@ -29,16 +29,21 @@ describe('MediaPlayer', () => {
       attributes: {
         friendly_name: 'Second Player',
       },
-    } as HassEntity;
+    } as unknown as HassEntity;
 
     config = newConfig({
       entitiesToIgnoreVolumeLevelFor: ['media_player.ignore'],
       mediaTitleRegexToReplace: 'Title',
       mediaTitleReplacement: 'Replaced Title',
       adjustVolumeRelativeToMainPlayer: true,
+      inverseGroupMuteState: inverseGroupMuteState,
     });
-
+    hassEntity1.attributes.group_members.length = groupSize;
     mediaPlayer = new MediaPlayer(hassEntity1, config, [hassEntity1, hassEntity2]);
+  }
+
+  beforeEach(() => {
+    initMediaPlayer(1);
   });
 
   it('should initialize correctly', () => {
@@ -66,10 +71,22 @@ describe('MediaPlayer', () => {
     expect(mediaPlayer.isPlaying()).toBe(false);
   });
 
-  it('should check if is muted correctly', () => {
-    expect(mediaPlayer.isMuted(false)).toBe(false);
+  it('should check if member is muted correctly', () => {
+    expect(mediaPlayer.isMemberMuted()).toBe(false);
     mediaPlayer.attributes.is_volume_muted = true;
-    expect(mediaPlayer.isMuted(false)).toBe(true);
+    expect(mediaPlayer.isMemberMuted()).toBe(true);
+  });
+
+  it('should check if group is muted correctly', () => {
+    initMediaPlayer(2);
+    expect(mediaPlayer.isGroupMuted()).toBe(false);
+    mediaPlayer.members[1].attributes.is_volume_muted = true;
+    expect(mediaPlayer.isGroupMuted()).toBe(false);
+    mediaPlayer.members.forEach((member) => (member.attributes.is_volume_muted = true));
+    expect(mediaPlayer.isGroupMuted()).toBe(true);
+    initMediaPlayer(2, true);
+    mediaPlayer.members[1].attributes.is_volume_muted = true;
+    expect(mediaPlayer.isGroupMuted()).toBe(true);
   });
 
   it('should get current track correctly', () => {

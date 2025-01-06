@@ -50,7 +50,7 @@ class PlayerControls extends LitElement {
             <ha-icon-button hide=${noUpDown} @click=${this.volUp} .path=${mdiVolumePlus}></ha-icon-button>
           </div>
           <div class="icons">
-              <sonos-ha-player .store=${this.store} .features=${this.store.showPower(true)}></sonos-ha-player>
+            <sonos-ha-player .store=${this.store} .features=${this.store.showPower(true)}></sonos-ha-player>
           </div">
       </div>
   `;
@@ -114,11 +114,13 @@ class PlayerControls extends LitElement {
       .main {
         overflow: hidden auto;
       }
+      
       .icons {
         justify-content: center;
         display: flex;
         align-items: center;
       }
+
       .volume-controls {
         display: flex;
         align-items: center;
@@ -127,13 +129,16 @@ class PlayerControls extends LitElement {
           flex-grow: 1;
         }
       }
+
       *[hide] {
         display: none;
       }
+
       .big-icon {
         --mdc-icon-button-size: 5rem;
         --mdc-icon-size: 5rem;
       }
+
       .audio-input-format {
         flex: 1 0 0;
         margin-bottom: 10px;
@@ -141,6 +146,7 @@ class PlayerControls extends LitElement {
         align-self: stretch;
         position: relative;
       }
+
       .audio-input-format > div {
         color: var(--card-background-color);
         background: var(--disabled-text-color);
@@ -155,6 +161,7 @@ class PlayerControls extends LitElement {
         line-height: normal;
         padding: 3px;
       }
+
       .flex-1 {
         flex: 1;
       }

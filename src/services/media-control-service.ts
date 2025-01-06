@@ -127,7 +127,8 @@ export default class MediaControlService {
   }
 
   async toggleMute(mediaPlayer: MediaPlayer, updateMembers = true) {
-    const muteVolume = !mediaPlayer.isMuted(updateMembers);
+    const isMuted = updateMembers ? mediaPlayer.isGroupMuted() : mediaPlayer.isMemberMuted();
+    const muteVolume = !isMuted;
     await this.setVolumeMute(mediaPlayer, muteVolume, updateMembers);
   }
 
@@ -155,18 +156,6 @@ export default class MediaControlService {
     await this.hassService.callMediaService('media_seek', {
       entity_id: mediaPlayer.id,
       seek_position: position,
-    });
-  }
-
-  async play(playerId: string) {
-    await this.hassService.callMediaService('media_play', {
-      entity_id: playerId,
-    });
-  }
-
-  async pause(playerId: string) {
-    await this.hassService.callMediaService('media_pause', {
-      entity_id: playerId,
     });
   }
 }

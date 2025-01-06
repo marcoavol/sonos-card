@@ -23,7 +23,7 @@ export class Card extends LitElement {
   @state() showLoader!: boolean;
   @state() loaderTimestamp!: number;
   @state() cancelLoader!: boolean;
-  @state() activePlayerId!: string;
+  @state() activePlayerId?: string;
 
   render() {
     this.createStore();
@@ -34,6 +34,9 @@ export class Card extends LitElement {
     const contentHeight = showFooter ? height - footerHeight : height;
     const title = this.config.title;
     height = title ? height + TITLE_HEIGHT : height;
+    const noPlayersText = isSonosCard(this.config)
+      ? 'No supported players found'
+      : "No players found. Make sure you have configured entities in the card's configuration, or configured `entityPlatform`.";
     return html`
       <ha-card style=${this.haCardStyle(height)}>
         <div class="loader" ?hidden=${!this.showLoader}>
@@ -78,7 +81,7 @@ export class Card extends LitElement {
                       html`<sonos-queue .store=${this.store} @item-selected=${this.onMediaItemSelected}></sonos-queue>`,
                   ],
                 ])
-              : html`<div class="no-players">No supported players found</div>`
+              : html`<div class="no-players">${noPlayersText}</div>`
           }
         </div>
         ${when(
@@ -118,6 +121,10 @@ export class Card extends LitElement {
     }
     window.addEventListener(CALL_MEDIA_STARTED, this.callMediaStartedListener);
     window.addEventListener(CALL_MEDIA_DONE, this.callMediaDoneListener);
+    window.addEventListener('hashchange', () => {
+      this.activePlayerId = undefined;
+      this.createStore();
+    });
   }
 
   disconnectedCallback() {
@@ -160,9 +167,6 @@ export class Card extends LitElement {
     const newEntityId = (event as CustomEvent).detail.entityId;
     if (newEntityId !== this.activePlayerId) {
       this.activePlayerId = newEntityId;
-      //   if (this.config.sections?.includes(PLAYER)) {
-      //     this.section = PLAYER;
-      //   }
       this.requestUpdate();
     }
   };

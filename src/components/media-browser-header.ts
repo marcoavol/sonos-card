@@ -48,6 +48,7 @@ class MediaBrowserHeader extends LitElement {
         justify-content: space-between;
         align-items: center;
       }
+
       .title {
         display: flex;
         align-items: center;
@@ -62,14 +63,17 @@ class MediaBrowserHeader extends LitElement {
           margin-right: 6px;
         }
       }
+
       .title.center {
         width: 100%;
         justify-content: center;
       }
+
       .title.text-only {
         pointer-events: none;
         touch-action: none;
       }
+      
       *[hide] {
         display: none;
       }

@@ -47,9 +47,7 @@ export default class Store {
     this.config = config;
     const mediaPlayerHassEntities = this.getMediaPlayerHassEntities(this.hass);
     this.allGroups = this.createPlayerGroups(mediaPlayerHassEntities);
-    this.allMediaPlayers = mediaPlayerHassEntities
-      .map((entity) => new MediaPlayer(entity, config))
-      .filter((player) => player !== undefined);
+    this.allMediaPlayers = mediaPlayerHassEntities.map((entity) => new MediaPlayer(entity, config)).filter((player) => player !== undefined);
     this.activePlayer = this.determineActivePlayer(activePlayerId);
     this.hassService = new HassService(this.hass, currentSection, card, config);
     this.mediaControlService = new MediaControlService(this.hassService, config);

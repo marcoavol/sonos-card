@@ -16,7 +16,7 @@ class Footer extends LitElement {
       [PLAYER, icons?.player ?? 'mdi:home'],
       [MEDIA_BROWSER, icons?.mediaBrowser ?? 'mdi:star-outline'],
       [GROUPS, icons?.groups ?? 'mdi:speaker-multiple'],
-      [GROUPING, icons?.grouping ?? 'mdi:checkbox-multiple-marked-circle-outline'],
+      [GROUPING, icons?.grouping ?? 'mdi:checkbox-multiple-marked-outline'],
       [QUEUE, icons?.queue ?? 'mdi:queue-first-in-last-out'],
       [VOLUMES, icons?.volumes ?? 'mdi:tune'],
     ];

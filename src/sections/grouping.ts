@@ -220,11 +220,7 @@ export class Grouping extends LitElement {
     this.selectedPredefinedGroup = undefined;
 
     if (join.length > 0) {
-<<<<<<< HEAD
       await this.mediaControlService.join(activePlayerId, join);
-=======
-      await this.mediaControlService.join(newMainPlayer, join);
->>>>>>> 2676c717c669fbb308f9d667f7f5aeca16a8665e
     }
     if (unJoin.length > 0) {
       await this.mediaControlService.unJoin(unJoin);

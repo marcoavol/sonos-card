@@ -114,7 +114,7 @@ class PlayerControls extends LitElement {
       .main {
         overflow: hidden auto;
       }
-      
+
       .icons {
         justify-content: center;
         display: flex;

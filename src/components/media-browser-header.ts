@@ -73,7 +73,7 @@ class MediaBrowserHeader extends LitElement {
         pointer-events: none;
         touch-action: none;
       }
-      
+
       *[hide] {
         display: none;
       }

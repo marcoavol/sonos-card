@@ -12,7 +12,7 @@ class MediaRow extends LitElement {
 
   render() {
     return html`
-      <mwc-list-item hasMeta ?selected=${this.selected} ?activated=${this.selected} class="button">
+      <mwc-list-item class="button" hasMeta ?selected=${this.selected} ?activated=${this.selected}>
         <div class="row">${renderMediaBrowserItem(this.item)}</div>
         <slot slot="meta"></slot>
       </mwc-list-item>
@@ -42,12 +42,14 @@ class MediaRow extends LitElement {
         .mdc-deprecated-list-item__text {
           width: 100%;
         }
+
         .button {
-          margin: 0.3rem;
-          border-radius: 0.3rem;
+          border-radius: 4px;
           background: var(--secondary-background-color);
           --icon-width: 35px;
           height: 40px;
+          padding: 0.5rem;
+          margin-bottom: 0.5rem;
         }
 
         .row {

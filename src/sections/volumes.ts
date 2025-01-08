@@ -40,11 +40,11 @@ export class Volumes extends LitElement {
     const volUp = async () => await this.mediaControlService.volumeUp(player, updateMembers);
     const noUpDown = !!this.config.showVolumeUpAndDownButtons && nothing;
     const hideSwitches = updateMembers || !this.showSwitches[player.id];
-    return html` <div class="row">
-      <div class="volume-name">
-        <div class="volume-name-text">${name}</div>
+    return html` <div class="name-and-volume">
+      <div class="name">
+        <div class="name-text">${name}</div>
       </div>
-      <div class="slider-row">
+      <div class="volume">
         <ha-icon-button
           .disabled=${player.ignoreVolume}
           hide=${noUpDown}
@@ -102,17 +102,17 @@ export class Volumes extends LitElement {
 
   static get styles() {
     return css`
-      .row {
+      .name-and-volume {
         display: flex;
         flex-direction: column;
         padding: 0.5rem 1rem;
       }
 
-      .row:first-child {
+      .name-and-volume:first-child {
         padding-top: 1rem;
       }
 
-      .row:not(:first-child) {
+      .name-and-volume:not(:first-child) {
         border-top: solid var(--secondary-background-color);
       }
 
@@ -125,14 +125,14 @@ export class Volumes extends LitElement {
         padding: 0 0.5rem 0.5rem 0;
       }
 
-      .volume-name {
+      .name {
         flex: 1;
         overflow: hidden;
         flex-direction: column;
         text-align: center;
       }
 
-      .volume-name-text {
+      .name-text {
         flex: 1;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -142,7 +142,7 @@ export class Volumes extends LitElement {
         min-height: 1rem;
       }
 
-      .slider-row {
+      .volume {
         display: flex;
         align-items: center;
       }

@@ -51,7 +51,7 @@ export class Grouping extends LitElement {
                 selected=${item.isSelected || nothing}
               >
                 <div class="name">${item.name}</div>
-                <div class="selected-volume">
+                <div class="volume-and-select">
                   <div class="volume">
                     <ha-icon-button
                       .disabled=${item.player.ignoreVolume}
@@ -71,7 +71,7 @@ export class Grouping extends LitElement {
                     ></ha-icon-button>
                   </div>
                   <ha-icon
-                    class="selected-icon"
+                    class="select"
                     selected=${item.isSelected || nothing}
                     .icon="mdi:${item.icon}"
                     @click=${() => this.toggleItem(item)}
@@ -92,106 +92,6 @@ export class Grouping extends LitElement {
         </ha-control-button-group>
       </div>
     `;
-  }
-
-  static get styles() {
-    return [
-      listStyle,
-      css`
-        .wrapper {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-        }
-
-        .predefined-groups {
-          margin: 1rem;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .item {
-          color: var(--secondary-text-color);
-          display: flex;
-          flex-direction: column;
-          padding: 0.5rem 1rem;
-        }
-
-        .item:first-child {
-          padding-top: 1rem;
-        }
-
-        .item:not(:first-child) {
-          border-top: solid var(--secondary-background-color) !important;
-        }
-
-        .item[disabled] .selected-icon {
-          opacity: 0.5;
-        }
-
-        .item[selected] .name {
-          color: var(--accent-color);
-        }
-
-        .item[selected] sonos-volume {
-          --accent-color: unset !important;
-        }
-
-        .name {
-          width: 100%;
-          text-align: center;
-          font-weight: bold;
-          font-size: 1.1rem;
-        }
-
-        .selected-icon {
-          padding: 0.5rem;
-          flex-shrink: 0;
-        }
-
-        .selected-icon[selected] {
-          color: var(--accent-color);
-        }
-
-        .selected-volume {
-          display: flex;
-          align-items: center;
-        }
-
-        .volume {
-          flex: 1;
-          display: flex;
-          align-items: center;
-        }
-
-        sonos-volume {
-          flex: 1;
-          --accent-color: var(--secondary-text-color);
-        }
-
-        .list {
-          flex: 1;
-          overflow: auto;
-        }
-
-        .buttons {
-          flex-shrink: 0;
-          margin: 0 1rem;
-          padding-top: 0.5rem;
-        }
-
-        .apply {
-          --control-button-background-color: var(--accent-color);
-        }
-
-        *[hide] {
-          display: none;
-        }
-      `,
-    ];
   }
 
   toggleItem(item: GroupingItem) {
@@ -315,5 +215,107 @@ export class Grouping extends LitElement {
         this.toggleItem(item);
       }
     });
+  }
+
+  static get styles() {
+    return [
+      listStyle,
+      css`
+        .wrapper {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .predefined-groups {
+          margin: 1rem;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .item {
+          color: var(--secondary-text-color);
+          display: flex;
+          flex-direction: column;
+          padding: 0.5rem 1rem;
+        }
+
+        .item:first-child {
+          padding-top: 1rem;
+        }
+
+        .item:not(:first-child) {
+          border-top: solid var(--secondary-background-color) !important;
+        }
+
+        .item[disabled] .select {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .item[selected] .name {
+          color: var(--accent-color);
+        }
+
+        .item[selected] sonos-volume {
+          --accent-color: unset !important;
+        }
+
+        .name {
+          width: 100%;
+          text-align: center;
+          font-weight: bold;
+          font-size: 1.1rem;
+        }
+
+        .select {
+          padding: 0.5rem;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+
+        .select[selected] {
+          color: var(--accent-color);
+        }
+
+        .volume-and-select {
+          display: flex;
+          align-items: center;
+        }
+
+        .volume {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+
+        sonos-volume {
+          flex: 1;
+          --accent-color: var(--secondary-text-color);
+        }
+
+        .list {
+          flex: 1;
+          overflow: auto;
+        }
+
+        .buttons {
+          flex-shrink: 0;
+          margin: 0 1rem;
+          padding-top: 0.5rem;
+        }
+
+        .apply {
+          --control-button-background-color: var(--accent-color);
+        }
+
+        *[hide] {
+          display: none;
+        }
+      `,
+    ];
   }
 }

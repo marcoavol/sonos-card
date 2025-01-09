@@ -34,6 +34,8 @@ export class Grouping extends LitElement {
       this.notJoinedPlayers = this.getNotJoinedPlayers();
       this.joinedPlayers = this.getJoinedPlayers();
     }
+    
+    const noUpDown = !!this.config.showVolumeUpAndDownButtons && nothing;
 
     if (this.config.skipApplyButtonWhenGrouping && (this.modifiedItems.length > 0 || this.selectedPredefinedGroup)) {
       this.applyGrouping();
@@ -59,6 +61,7 @@ export class Grouping extends LitElement {
                   <div class="volume">
                     <ha-icon-button
                       .disabled=${item.player.ignoreVolume}
+                      hide=${noUpDown}
                       @click=${() => this.mediaControlService.volumeDown(item.player, false)}
                       .path=${mdiVolumeMinus}
                     ></ha-icon-button>
@@ -70,6 +73,7 @@ export class Grouping extends LitElement {
                     ></sonos-volume>
                     <ha-icon-button
                       .disabled=${item.player.ignoreVolume}
+                      hide=${noUpDown}
                       @click=${() => this.mediaControlService.volumeUp(item.player, false)}
                       .path=${mdiVolumePlus}
                     ></ha-icon-button>

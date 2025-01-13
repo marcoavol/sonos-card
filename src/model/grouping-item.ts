@@ -1,3 +1,5 @@
+import { mdiCheckboxBlankOutline } from '@mdi/js';
+import { mdiCheckboxOutline } from '@mdi/js';
 import { MediaPlayer } from './media-player';
 
 export class GroupingItem {
@@ -16,6 +18,6 @@ export class GroupingItem {
     this.isSelected = isModified ? !currentlyJoined : currentlyJoined;
     this.player = player;
     this.name = player.name;
-    this.icon = this.isSelected ? 'checkbox-outline' : 'checkbox-blank-outline';
+    this.icon = this.isSelected ? mdiCheckboxOutline : mdiCheckboxBlankOutline;
   }
 }

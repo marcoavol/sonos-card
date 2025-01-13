@@ -7,9 +7,12 @@ import { dispatchActivePlayerId, getGroupingChanges } from '../utils/utils';
 import { listStyle } from '../constants';
 import { MediaPlayer } from '../model/media-player';
 import '../components/grouping-button';
-import { CardConfig, PredefinedGroup, PredefinedGroupPlayer } from '../types';
+import { CardConfig, MediaPlayerEntityFeature, PredefinedGroup, PredefinedGroupPlayer } from '../types';
 import { GroupingItem } from '../model/grouping-item';
-import { mdiVolumeMinus, mdiVolumePlus } from '@mdi/js';
+import { mdiVolumeMinus, mdiVolumePlus, mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import HassService from '../services/hass-service';
+import { HassEntity } from 'home-assistant-js-websocket';
+import { until } from 'lit/directives/until.js';
 
 export class Grouping extends LitElement {
   @property({ attribute: false }) store!: Store;
@@ -17,11 +20,13 @@ export class Grouping extends LitElement {
   private groupingItems!: GroupingItem[];
   private activePlayer!: MediaPlayer;
   private mediaControlService!: MediaControlService;
+  private hassService!: HassService;
   private mediaPlayerIds!: string[];
   private notJoinedPlayers!: string[];
   private joinedPlayers!: string[];
-  @state() modifiedItems: string[] = [];
-  @state() selectedPredefinedGroup?: PredefinedGroup;
+  @state() private modifiedItems: string[] = [];
+  @state() private selectedPredefinedGroup?: PredefinedGroup;
+  @state() private showSwitches: { [entity: string]: boolean } = {};
   @state() private isGroupingInProgress = false;
 
   render() {
@@ -29,12 +34,13 @@ export class Grouping extends LitElement {
       this.config = this.store.config;
       this.activePlayer = this.store.activePlayer;
       this.mediaControlService = this.store.mediaControlService;
+      this.hassService = this.store.hassService;
       this.mediaPlayerIds = this.store.allMediaPlayers.map((player) => player.id);
       this.groupingItems = this.getGroupingItems();
       this.notJoinedPlayers = this.getNotJoinedPlayers();
       this.joinedPlayers = this.getJoinedPlayers();
     }
-    
+
     const noUpDown = !!this.config.showVolumeUpAndDownButtons && nothing;
 
     if (this.config.skipApplyButtonWhenGrouping && (this.modifiedItems.length > 0 || this.selectedPredefinedGroup)) {
@@ -48,42 +54,67 @@ export class Grouping extends LitElement {
         </div>
         <div class="list">
           ${this.groupingItems.map((item) => {
+            const hideSwitches = !this.showSwitches[item.player.id];
             return html`
-              <div
-                class="item"
-                modified=${item.isModified || nothing}
-                disabled=${item.isDisabled || nothing}
-                selected=${item.isSelected || nothing}
-                grouping-in-progress=${this.isGroupingInProgress || nothing}
-              >
-                <div class="name">${item.name}</div>
-                <div class="volume-and-select">
-                  <div class="volume">
-                    <ha-icon-button
-                      .disabled=${item.player.ignoreVolume}
-                      hide=${noUpDown}
-                      @click=${() => this.mediaControlService.volumeDown(item.player, false)}
-                      .path=${mdiVolumeMinus}
-                    ></ha-icon-button>
-                    <sonos-volume
-                      .store=${this.store}
-                      .player=${item.player}
-                      .updateMembers=${false}
-                      .slim=${true}
-                    ></sonos-volume>
-                    <ha-icon-button
-                      .disabled=${item.player.ignoreVolume}
-                      hide=${noUpDown}
-                      @click=${() => this.mediaControlService.volumeUp(item.player, false)}
-                      .path=${mdiVolumePlus}
-                    ></ha-icon-button>
+              <div class="item-and-switches">
+                <div
+                  class="item"
+                  modified=${item.isModified || nothing}
+                  disabled=${item.isDisabled || nothing}
+                  selected=${item.isSelected || nothing}
+                  grouping-in-progress=${this.isGroupingInProgress || nothing}
+                >
+                  <ha-icon class="speaker" .icon="mdi:${item.player.attributes.icon || 'speaker'}"></ha-icon>
+                  <div class="name-and-volume">
+                    <div class="name-and-chevron">
+                      <div class="name">${item.name}</div>
+                      <ha-icon-button
+                        class="chevron"
+                        .path="${hideSwitches ? mdiChevronDown : mdiChevronUp}"
+                        @click=${() => this.toggleShowSwitches(item.player)}
+                        hide=${this.config.hideVolumeCogwheel || nothing}
+                      ></ha-icon-button>
+                    </div>
+                    <div class="volume">
+                      <ha-icon-button
+                        .disabled=${item.player.ignoreVolume}
+                        hide=${noUpDown}
+                        @click=${() => this.mediaControlService.volumeDown(item.player, false)}
+                        .path=${mdiVolumeMinus}
+                      ></ha-icon-button>
+                      <sonos-volume
+                        .store=${this.store}
+                        .player=${item.player}
+                        .updateMembers=${false}
+                        .slim=${true}
+                      ></sonos-volume>
+                      <ha-icon-button
+                        .disabled=${item.player.ignoreVolume}
+                        hide=${noUpDown}
+                        @click=${() => this.mediaControlService.volumeUp(item.player, false)}
+                        .path=${mdiVolumePlus}
+                      ></ha-icon-button>
+                    </div>
                   </div>
-                  <ha-icon
+                  <ha-icon-button
                     class="select"
+                    .path="${item.icon}"
                     selected=${item.isSelected || nothing}
-                    .icon="mdi:${item.icon}"
                     @click=${() => this.toggleItemIfEnabled(item)}
-                  ></ha-icon>
+                  ></ha-icon-button>
+                </div>
+                <div class="switches" hide=${hideSwitches || nothing}>
+                  ${when(
+                    this.hasAvailableInputSources(item.player),
+                    () => html`
+                      <sonos-ha-player
+                        .store=${this.store}
+                        .player=${item.player}
+                        .features=${[MediaPlayerEntityFeature.SELECT_SOURCE]}
+                      ></sonos-ha-player>
+                    `,
+                  )}
+                  ${until(this.getAdditionalControls(hideSwitches, item.player))}
                 </div>
               </div>
             `;
@@ -232,6 +263,41 @@ export class Grouping extends LitElement {
     });
   }
 
+  private toggleShowSwitches(player: MediaPlayer) {
+    Object.keys(this.showSwitches)
+      .filter((key) => key !== player.id)
+      .forEach((key) => (this.showSwitches[key] = false));
+    this.showSwitches[player.id] = !this.showSwitches[player.id];
+    this.requestUpdate();
+  }
+
+  private hasAvailableInputSources(player: MediaPlayer) {
+    const entity = this.store.hass.states[player.id];
+    if (!entity || entity.state === 'unavailable') {
+      return false;
+    }
+    const sourceList = entity.attributes?.source_list;
+    return Array.isArray(sourceList) && sourceList.length > 0;
+  }
+
+  private async getAdditionalControls(hide: boolean, player: MediaPlayer) {
+    if (hide) {
+      return;
+    }
+    const relatedEntities = await this.hassService.getRelatedEntities(player, 'switch', 'number', 'sensor');
+    const controls = relatedEntities.map((relatedEntity: HassEntity) => {
+      relatedEntity.attributes.friendly_name =
+        relatedEntity.attributes.friendly_name?.replaceAll(player.name, '')?.trim() ?? '';
+      return html`
+        <div>
+          <state-card-content .stateObj=${relatedEntity} .hass=${this.store.hass}></state-card-content>
+        </div>
+      `;
+    });
+    controls.push(html`<sonos-sleep-timer .store=${this.store} .player=${player}></sonos-sleep-timer>`);
+    return controls;
+  }
+
   static get styles() {
     return [
       listStyle,
@@ -251,74 +317,113 @@ export class Grouping extends LitElement {
           flex-shrink: 0;
         }
 
-        .item {
-          color: var(--secondary-text-color);
-          display: flex;
-          flex-direction: column;
-          padding: 0.5rem 1rem;
+        .list {
+          flex: 1;
+          overflow: auto;
         }
 
-        .item:first-child {
+        .item-and-switches {
+          display: flex;
+          flex-direction: column;
+          padding: 0.75rem 0.5rem;
+        }
+
+        .item-and-switches:first-child {
           padding-top: 1rem;
         }
 
-        .item:not(:first-child) {
+        .item-and-switches:not(:first-child) {
           border-top: solid var(--secondary-background-color) !important;
+        }
+
+        .item {
+          color: var(--secondary-text-color);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .item[selected] sonos-volume {
+          --accent-color: unset;
+        }
+
+        .item[selected] {
+          .select,
+          .name {
+            color: var(--accent-color);
+          }
         }
 
         .item[disabled] .select {
           opacity: 0.5;
-          cursor: not-allowed;
+          pointer-events: none;
         }
 
         .item[grouping-in-progress] .select {
-          cursor: not-allowed;
+          opacity: 0.5;
+          pointer-events: none;
         }
 
-        .item[selected] .name {
-          color: var(--accent-color);
+        .name-and-volume {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
         }
 
-        .item[selected] sonos-volume {
-          --accent-color: unset !important;
+        .name-and-chevron {
+          display: flex;
+          align-items: center;
+          margin-bottom: -3px;
         }
 
         .name {
-          width: 100%;
-          text-align: center;
           font-weight: bold;
           font-size: 1.1rem;
-        }
-
-        .volume-and-select {
-          display: flex;
-          align-items: center;
+          text-align: left;
         }
 
         .volume {
-          flex: 1;
           display: flex;
           align-items: center;
+
+          * {
+            --mdc-icon-button-size: 30px;
+            --mdc-icon-size: 20px;
+          }
+
+          sonos-volume {
+            flex: 1;
+            --accent-color: var(--secondary-text-color);
+            --slider-thickness: 20px;
+          }
+
+          ha-icon-button:last-child {
+            margin-left: 5px;
+          }
         }
 
-        sonos-volume {
-          flex: 1;
-          --accent-color: var(--secondary-text-color);
+        .speaker {
+          --mdc-icon-size: 3.5rem;
+        }
+
+        .chevron {
+          --mdc-icon-size: 1.8rem;
+          --mdc-icon-button-size: 2rem;
         }
 
         .select {
-          padding: 0.5rem;
-          flex-shrink: 0;
-          cursor: pointer;
+          --mdc-icon-size: 2rem;
+          --mdc-icon-button-size: 3rem;
         }
 
-        .select[selected] {
-          color: var(--accent-color);
-        }
-
-        .list {
-          flex: 1;
-          overflow: auto;
+        .switches {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          gap: 1rem;
+          overflow: hidden;
+          padding: 0.5rem 0.5rem 0 0;
+          --mdc-theme-primary: var(--primary-color);
         }
 
         .buttons {

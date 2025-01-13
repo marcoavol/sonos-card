@@ -23,7 +23,6 @@ class Group extends LitElement {
       ? ''
       : this.player.getCurrentTrack() || this.store.config.labelWhenNoMediaIsSelected;
     const speakerList = getSpeakerList(this.player, this.store.predefinedGroups);
-    const icons = this.player.members.map((member) => member.attributes.icon).filter((icon) => icon);
     return html`
       <mwc-list-item
         hasMeta
@@ -32,7 +31,7 @@ class Group extends LitElement {
         @click=${() => this.handleGroupClicked()}
       >
         <div class="row">
-          ${this.renderIcons(icons)}
+          <ha-icon .icon=${this.player.members.length > 1 ? 'mdi:speaker-multiple' : 'mdi:speaker'}></ha-icon>
           <div class="text">
             <span class="speakers">${speakerList}</span>
             <span class="song-title">${currentTrack}</span>
@@ -51,20 +50,6 @@ class Group extends LitElement {
         )}
       </mwc-list-item>
     `;
-  }
-
-  private renderIcons(icons: (string | undefined)[]) {
-    const length = icons.length;
-    const iconsToShow = icons.slice(0, 4);
-    const iconClass = length > 1 ? 'small' : '';
-    const iconsHtml = iconsToShow.map((icon) => html` <ha-icon class=${iconClass} .icon=${icon}></ha-icon>`);
-    if (length > 4) {
-      iconsHtml.splice(3, 1, html`<span>+${length - 3}</span>`);
-    }
-    if (length > 2) {
-      iconsHtml.splice(2, 0, html`<br />`);
-    }
-    return html` <div class="icons" ?empty=${length === 0}>${iconsHtml}</div>`;
   }
 
   connectedCallback() {
@@ -145,26 +130,11 @@ class Group extends LitElement {
         color: var(--secondary-text-color);
       }
 
-      .icons {
-        text-align: center;
-        margin: 0;
-        min-width: 5rem;
-        max-width: 5rem;
-      }
-
-      .icons[empty] {
-        min-width: 1rem;
-        max-width: 1rem;
-      }
-
       ha-icon {
         --mdc-icon-size: 3rem;
-        margin: 1rem;
-      }
-
-      ha-icon.small {
-        --mdc-icon-size: 2rem;
-        margin: 0;
+        color: var(--secondary-text-color);
+        text-align: center;
+        padding: 0 0.5rem;
       }
 
       .bars {

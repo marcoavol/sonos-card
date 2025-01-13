@@ -68,7 +68,7 @@ class Volume extends LitElement {
     return css`
       ha-control-slider {
         --control-slider-color: var(--accent-color);
-        --control-slider-thickness: 30px;
+        --control-slider-thickness: var(--slider-thickness, 30px);
       }
 
       ha-control-slider.over-threshold {

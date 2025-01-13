@@ -71,7 +71,7 @@ export class Volumes extends LitElement {
         ></ha-icon-button>
       </div>
       <div class="switches" hide=${hideSwitches || nothing}>
-        <sonos-ha-player .store=${this.store} .features=${[SELECT_SOURCE]}> </sonos-ha-player>
+        <sonos-ha-player .store=${this.store} .player=${player} .features=${[SELECT_SOURCE]}></sonos-ha-player>
         ${until(this.getAdditionalControls(hideSwitches, player))}
       </div>
     </div>`;

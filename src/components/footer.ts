@@ -42,7 +42,7 @@ class Footer extends LitElement {
     return css`
       :host {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
       }
       :host > * {
         align-content: center;

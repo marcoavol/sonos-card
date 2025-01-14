@@ -83,7 +83,7 @@ class PlayerControls extends LitElement {
     const audioInputFormat = sensors.find((sensor) => sensor.entity_id.toLowerCase().includes('audio'));
     return audioInputFormat &&
       audioInputFormat.state &&
-      audioInputFormat.state !== 'No audio' &&
+      !audioInputFormat.state.toLowerCase().startsWith('no') &&
       !audioInputFormat.state.toLowerCase().includes('unknown')
       ? html`<div>${audioInputFormat.state}</div>`
       : nothing;

@@ -257,6 +257,9 @@ export class Card extends LitElement {
     if (newConfig.mediaBrowserItemsPerRow) {
       newConfig.favoritesItemsPerRow = newConfig.mediaBrowserItemsPerRow;
     }
+    if (newConfig.hideVolumeCogwheel) {
+      newConfig.hideSpeakerConfigButton = newConfig.hideVolumeCogwheel;
+    }
     this.config = newConfig;
   }
 

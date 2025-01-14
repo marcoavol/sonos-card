@@ -54,6 +54,7 @@ export class Grouping extends LitElement {
         </div>
         <div class="list">
           ${this.groupingItems.map((item) => {
+            console.log('config', this.config);
             const hideSwitches = !this.showSwitches[item.player.id];
             return html`
               <div class="item-and-switches">
@@ -71,7 +72,7 @@ export class Grouping extends LitElement {
                       <ha-icon-button
                         class="chevron"
                         .path="${hideSwitches ? mdiChevronDown : mdiChevronUp}"
-                        hide=${this.config.hideVolumeCogwheel || nothing}
+                        hide=${this.config.hideSpeakerConfigButton || nothing}
                       ></ha-icon-button>
                     </div>
                     <div class="volume">
@@ -263,7 +264,7 @@ export class Grouping extends LitElement {
   }
 
   private toggleShowSwitches(player: MediaPlayer) {
-    if (!this.config.hideVolumeCogwheel) {
+    if (!this.config.hideSpeakerConfigButton) {
       Object.keys(this.showSwitches)
         .filter((key) => key !== player.id)
         .forEach((key) => (this.showSwitches[key] = false));

@@ -64,7 +64,7 @@ export class Volumes extends LitElement {
           .path=${mdiVolumePlus}
         ></ha-icon-button>
         <ha-icon-button
-          hide=${updateMembers || this.config.hideVolumeCogwheel || nothing}
+          hide=${updateMembers || this.config.hideSpeakerConfigButton || nothing}
           @click=${() => this.toggleShowSwitches(player)}
           .path=${mdiCog}
           show-switches=${this.showSwitches[player.id] || nothing}

@@ -79,7 +79,7 @@ export interface CardConfig extends LovelaceCardConfig {
   queueTitle?: string;
   adjustVolumeRelativeToMainPlayer?: boolean;
   skipApplyButtonWhenGrouping?: boolean;
-  hideVolumeCogwheel?: boolean;
+  hideSpeakerConfigButton?: boolean;
   dynamicVolumeSliderThreshold?: number;
   dynamicVolumeSliderMax?: number;
   artworkMinHeight?: number;

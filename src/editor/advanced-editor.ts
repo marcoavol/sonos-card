@@ -82,7 +82,7 @@ export const ADVANCED_SCHEMA = [
     selector: { boolean: {} },
   },
   {
-    name: 'hideVolumeCogwheel',
+    name: 'hideSpeakerConfigButton',
     selector: { boolean: {} },
   },
   {

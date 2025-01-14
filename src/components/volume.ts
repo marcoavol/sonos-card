@@ -95,7 +95,7 @@ class Volume extends LitElement {
 
       .volume-slider {
         flex: 1;
-        padding-right: 0.6rem;
+        padding: 0 5px;
       }
 
       *[slim] .volume-slider {

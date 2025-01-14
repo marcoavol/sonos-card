@@ -54,7 +54,6 @@ export class Grouping extends LitElement {
         </div>
         <div class="list">
           ${this.groupingItems.map((item) => {
-            console.log('config', this.config);
             const hideSwitches = !this.showSwitches[item.player.id];
             return html`
               <div class="item-and-switches">
@@ -304,6 +303,11 @@ export class Grouping extends LitElement {
     return [
       listStyle,
       css`
+        * {
+          --mdc-icon-size: 20px;
+          --mdc-icon-button-size: 30px;
+        }
+
         .wrapper {
           display: flex;
           flex-direction: column;
@@ -393,34 +397,21 @@ export class Grouping extends LitElement {
           display: flex;
           align-items: center;
 
-          * {
-            --mdc-icon-button-size: 30px;
-            --mdc-icon-size: 20px;
-          }
-
           sonos-volume {
             flex: 1;
+            margin: 0 3px;
             --accent-color: var(--secondary-text-color);
             --slider-thickness: 20px;
-          }
-
-          ha-icon-button:last-child {
-            margin-left: 5px;
           }
         }
 
         .speaker {
-          --mdc-icon-size: 3.5rem;
-        }
-
-        .chevron {
-          --mdc-icon-size: 1.8rem;
-          --mdc-icon-button-size: 2rem;
+          --mdc-icon-size: 3.75rem;
         }
 
         .select {
-          --mdc-icon-size: 2rem;
-          --mdc-icon-button-size: 3rem;
+          --mdc-icon-size: 2.2rem;
+          --mdc-icon-button-size: 3.2rem;
         }
 
         .switches {

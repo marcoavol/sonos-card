@@ -11,12 +11,14 @@ export class SectionButton extends LitElement {
   @property() selectedSection!: Section;
 
   render() {
-    return html`<ha-icon-button
-      @click=${() => this.dispatchSection()}
-      selected=${this.selectedSection === this.section || nothing}
-    >
-      <ha-icon .icon=${this.icon}></ha-icon>
-    </ha-icon-button>`;
+    return html`
+      <ha-icon-button
+        @click=${() => this.dispatchSection()}
+        selected=${this.selectedSection === this.section || nothing}
+      >
+        <ha-icon .icon=${this.icon}></ha-icon>
+      </ha-icon-button>
+    `;
   }
 
   private dispatchSection() {

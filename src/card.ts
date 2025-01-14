@@ -89,7 +89,7 @@ export class Card extends LitElement {
             html`<sonos-footer
               style=${this.footerStyle(footerHeight)}
               .config=${this.config}
-              .section="${this.section}}"
+              .section="${this.section}"
             >
             </sonos-footer>`,
         )}
@@ -136,7 +136,6 @@ export class Card extends LitElement {
 
   private showSectionListener = (event: Event) => {
     const section = (event as CustomEvent).detail;
-    console.log('showSectionListener called with section:', section);
     if (!this.config.sections || this.config.sections.indexOf(section) > -1) {
       this.section = section;
     }

@@ -4,8 +4,6 @@ import { CardConfig, Section } from '../types';
 import './section-button';
 import { isSonosCard } from '../utils/utils';
 
-const { GROUPING, GROUPS, MEDIA_BROWSER, PLAYER, VOLUMES, QUEUE } = Section;
-
 class Footer extends LitElement {
   @property({ attribute: false }) config!: CardConfig;
   @property() section!: Section;
@@ -13,15 +11,15 @@ class Footer extends LitElement {
   render() {
     const icons = this.config.sectionButtonIcons;
     let sections: [Section, string][] = [
-      [PLAYER, icons?.player ?? 'mdi:home'],
-      [MEDIA_BROWSER, icons?.mediaBrowser ?? 'mdi:star-outline'],
-      [GROUPS, icons?.groups ?? 'mdi:speaker-multiple'],
-      [GROUPING, icons?.grouping ?? 'mdi:checkbox-multiple-marked-outline'],
-      [QUEUE, icons?.queue ?? 'mdi:queue-first-in-last-out'],
-      [VOLUMES, icons?.volumes ?? 'mdi:tune'],
+      [Section.PLAYER, icons?.player ?? 'mdi:home'],
+      [Section.MEDIA_BROWSER, icons?.mediaBrowser ?? 'mdi:star-outline'],
+      [Section.GROUPS, icons?.groups ?? 'mdi:speaker-multiple'],
+      [Section.GROUPING, icons?.grouping ?? 'mdi:checkbox-multiple-marked-outline'],
+      [Section.QUEUE, icons?.queue ?? 'mdi:queue-first-in-last-out'],
+      [Section.VOLUMES, icons?.volumes ?? 'mdi:tune'],
     ];
     if (!isSonosCard(this.config)) {
-      sections = sections.filter(([section]) => section !== QUEUE);
+      sections = sections.filter(([section]) => section !== Section.QUEUE);
     }
     sections = sections.filter(([section]) => !this.config.sections || this.config.sections?.includes(section));
     return html`

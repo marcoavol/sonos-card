@@ -2,8 +2,10 @@ import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import Store from '../model/store';
-import { dispatchActivePlayerId, getSpeakerList } from '../utils/utils';
+import { customEvent, dispatchActivePlayerId, getSpeakerList } from '../utils/utils';
 import { MediaPlayer } from '../model/media-player';
+import { SHOW_SECTION } from '../constants';
+import { Section } from '../types';
 
 class Group extends LitElement {
   @property({ attribute: false }) store!: Store;
@@ -58,7 +60,9 @@ class Group extends LitElement {
   }
 
   private handleGroupClicked() {
-    if (!this.selected) {
+    if (this.selected) {
+      this.dispatchEvent(customEvent(SHOW_SECTION, Section.GROUPING));
+    } else {
       this.selected = true;
       this.dispatchEntityIdEvent();
     }

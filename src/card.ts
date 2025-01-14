@@ -6,12 +6,11 @@ import Store from './model/store';
 import { CardConfig, Section } from './types';
 import './components/footer';
 import './editor/editor';
-import { ACTIVE_PLAYER_EVENT, CALL_MEDIA_DONE, CALL_MEDIA_STARTED } from './constants';
+import { ACTIVE_PLAYER_EVENT, CALL_MEDIA_DONE, CALL_MEDIA_STARTED, SHOW_SECTION } from './constants';
 import { when } from 'lit/directives/when.js';
 import { styleMap } from 'lit-html/directives/style-map.js';
 import { cardDoesNotContainAllSections, getHeight, getWidth, isSonosCard } from './utils/utils';
 
-const { GROUPING, GROUPS, MEDIA_BROWSER, PLAYER, VOLUMES, QUEUE } = Section;
 const TITLE_HEIGHT = 2;
 const FOOTER_HEIGHT = 5;
 
@@ -48,9 +47,9 @@ export class Card extends LitElement {
           ${
             this.activePlayerId
               ? choose(this.section, [
-                  [PLAYER, () => html` <sonos-player .store=${this.store}></sonos-player>`],
+                  [Section.PLAYER, () => html` <sonos-player .store=${this.store}></sonos-player>`],
                   [
-                    GROUPS,
+                    Section.GROUPS,
                     () =>
                       html` <sonos-groups
                         .store=${this.store}
@@ -58,7 +57,7 @@ export class Card extends LitElement {
                       ></sonos-groups>`,
                   ],
                   [
-                    GROUPING,
+                    Section.GROUPING,
                     () =>
                       html`<sonos-grouping
                         .store=${this.store}
@@ -66,7 +65,7 @@ export class Card extends LitElement {
                       ></sonos-grouping>`,
                   ],
                   [
-                    MEDIA_BROWSER,
+                    Section.MEDIA_BROWSER,
                     () => html`
                       <sonos-media-browser
                         .store=${this.store}
@@ -74,9 +73,9 @@ export class Card extends LitElement {
                       ></sonos-media-browser>
                     `,
                   ],
-                  [VOLUMES, () => html` <sonos-volumes .store=${this.store}></sonos-volumes>`],
+                  [Section.VOLUMES, () => html` <sonos-volumes .store=${this.store}></sonos-volumes>`],
                   [
-                    QUEUE,
+                    Section.QUEUE,
                     () =>
                       html`<sonos-queue .store=${this.store} @item-selected=${this.onMediaItemSelected}></sonos-queue>`,
                   ],
@@ -90,8 +89,7 @@ export class Card extends LitElement {
             html`<sonos-footer
               style=${this.footerStyle(footerHeight)}
               .config=${this.config}
-              .section=${this.section}
-              @show-section=${this.showSectionListener}
+              .section="${this.section}}"
             >
             </sonos-footer>`,
         )}
@@ -121,6 +119,7 @@ export class Card extends LitElement {
     }
     window.addEventListener(CALL_MEDIA_STARTED, this.callMediaStartedListener);
     window.addEventListener(CALL_MEDIA_DONE, this.callMediaDoneListener);
+    window.addEventListener(SHOW_SECTION, this.showSectionListener);
     window.addEventListener('hashchange', () => {
       this.activePlayerId = undefined;
       this.createStore();
@@ -129,11 +128,15 @@ export class Card extends LitElement {
 
   disconnectedCallback() {
     window.removeEventListener(ACTIVE_PLAYER_EVENT, this.activePlayerListener);
+    window.removeEventListener(CALL_MEDIA_STARTED, this.callMediaStartedListener);
+    window.removeEventListener(CALL_MEDIA_DONE, this.callMediaDoneListener);
+    window.removeEventListener(SHOW_SECTION, this.showSectionListener);
     super.disconnectedCallback();
   }
 
   private showSectionListener = (event: Event) => {
     const section = (event as CustomEvent).detail;
+    console.log('showSectionListener called with section:', section);
     if (!this.config.sections || this.config.sections.indexOf(section) > -1) {
       this.section = section;
     }
@@ -172,8 +175,8 @@ export class Card extends LitElement {
   };
 
   private onMediaItemSelected = () => {
-    if (this.config.sections?.includes(PLAYER)) {
-      setTimeout(() => (this.section = PLAYER), 1000);
+    if (this.config.sections?.includes(Section.PLAYER)) {
+      setTimeout(() => (this.section = Section.PLAYER), 1000);
     }
   };
 
@@ -210,23 +213,24 @@ export class Card extends LitElement {
       }
     }
     const sections =
-      newConfig.sections || Object.values(Section).filter((section) => isSonosCard(newConfig) || section !== QUEUE);
+      newConfig.sections ||
+      Object.values(Section).filter((section) => isSonosCard(newConfig) || section !== Section.QUEUE);
     if (newConfig.startSection && sections.includes(newConfig.startSection)) {
       this.section = newConfig.startSection;
     } else if (sections) {
-      this.section = sections.includes(PLAYER)
-        ? PLAYER
-        : sections.includes(MEDIA_BROWSER)
-          ? MEDIA_BROWSER
-          : sections.includes(GROUPS)
-            ? GROUPS
-            : sections.includes(GROUPING)
-              ? GROUPING
-              : sections.includes(QUEUE) && isSonosCard(newConfig)
-                ? QUEUE
-                : VOLUMES;
+      this.section = sections.includes(Section.PLAYER)
+        ? Section.PLAYER
+        : sections.includes(Section.MEDIA_BROWSER)
+          ? Section.MEDIA_BROWSER
+          : sections.includes(Section.GROUPS)
+            ? Section.GROUPS
+            : sections.includes(Section.GROUPING)
+              ? Section.GROUPING
+              : sections.includes(Section.QUEUE) && isSonosCard(newConfig)
+                ? Section.QUEUE
+                : Section.VOLUMES;
     } else {
-      this.section = PLAYER;
+      this.section = Section.PLAYER;
     }
 
     newConfig.favoritesItemsPerRow = newConfig.favoritesItemsPerRow || 4;

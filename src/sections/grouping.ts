@@ -66,12 +66,11 @@ export class Grouping extends LitElement {
                 >
                   <ha-icon class="speaker" .icon="mdi:${item.player.attributes.icon || 'speaker'}"></ha-icon>
                   <div class="name-and-volume">
-                    <div class="name-and-chevron">
+                    <div class="name-and-chevron" @click=${() => this.toggleShowSwitches(item.player)}>
                       <div class="name">${item.name}</div>
                       <ha-icon-button
                         class="chevron"
                         .path="${hideSwitches ? mdiChevronDown : mdiChevronUp}"
-                        @click=${() => this.toggleShowSwitches(item.player)}
                         hide=${this.config.hideVolumeCogwheel || nothing}
                       ></ha-icon-button>
                     </div>
@@ -264,11 +263,13 @@ export class Grouping extends LitElement {
   }
 
   private toggleShowSwitches(player: MediaPlayer) {
-    Object.keys(this.showSwitches)
-      .filter((key) => key !== player.id)
-      .forEach((key) => (this.showSwitches[key] = false));
-    this.showSwitches[player.id] = !this.showSwitches[player.id];
-    this.requestUpdate();
+    if (!this.config.hideVolumeCogwheel) {
+      Object.keys(this.showSwitches)
+        .filter((key) => key !== player.id)
+        .forEach((key) => (this.showSwitches[key] = false));
+      this.showSwitches[player.id] = !this.showSwitches[player.id];
+      this.requestUpdate();
+    }
   }
 
   private hasAvailableInputSources(player: MediaPlayer) {
@@ -374,6 +375,11 @@ export class Grouping extends LitElement {
           display: flex;
           align-items: center;
           margin-bottom: -3px;
+          gap: 3px;
+        }
+
+        .name-and-chevron:not(:has(.chevron[hide])) {
+          cursor: pointer;
         }
 
         .name {

@@ -28,5 +28,6 @@ Do you like the Sonos Card? Support the original project by [punxaphil](https://
 
 * Fixed a bug where un-/grouping of media players was not working when the active player was deselected at the same time
 * Added an option to configure the title of the media browse section as a button that takes a tap action (for example to open Sonos app on mobile)
-* Minor UI changes to according to personal preference and fix some spacing issues
+* Fixed minor spacing and layout issues
+* Combined the volumes and grouping sections
 * ...

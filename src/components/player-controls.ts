@@ -30,8 +30,10 @@ class PlayerControls extends LitElement {
     const pauseOrStop = this.config.stopInsteadOfPause ? STOP : PAUSE;
     return html`
       <div class="main" id="mediaControls">
-          <div class="icons">
-              <div class="flex-1"></div>
+        <div class="audio-input-format" hide=${!this.config.showAudioInputFormat}>
+          ${until(this.getAudioInputFormat())}
+        </div>
+        <div class="icons">
               <sonos-ha-player .store=${this.store} .features=${this.showShuffle()}></sonos-ha-player>
               <sonos-ha-player .store=${this.store} .features=${this.showPrev()}></sonos-ha-player>
               <ha-icon-button hide=${noFastForwardAndRewind} @click=${this.rewind} .path=${mdiRewind}></ha-icon-button>
@@ -39,9 +41,6 @@ class PlayerControls extends LitElement {
               <ha-icon-button hide=${noFastForwardAndRewind} @click=${this.fastForward} .path=${mdiFastForward}></ha-icon-button>
               <sonos-ha-player .store=${this.store} .features=${this.showNext()}></sonos-ha-player>
               <sonos-ha-player .store=${this.store} .features=${this.showRepeat()}></sonos-ha-player>
-              <div class="audio-input-format">
-                 ${this.config.showAudioInputFormat && until(this.getAudioInputFormat())}
-              </div>
               <sonos-ha-player .store=${this.store} .features=${this.showBrowseMedia()}></sonos-ha-player>
           </div>
           <div class="volume-controls">
@@ -83,10 +82,13 @@ class PlayerControls extends LitElement {
 
   private async getAudioInputFormat() {
     const sensors = await this.store.hassService.getRelatedEntities(this.activePlayer, 'sensor');
-    const audioInputFormat = sensors.find((sensor) => sensor.entity_id.includes('audio_input_format'));
-    return audioInputFormat && audioInputFormat.state && audioInputFormat.state !== 'No audio'
+    const audioInputFormat = sensors.find((sensor) => sensor.entity_id.toLowerCase().includes('audio'));
+    return audioInputFormat &&
+      audioInputFormat.state &&
+      audioInputFormat.state !== 'No audio' &&
+      !audioInputFormat.state.toLowerCase().includes('unknown')
       ? html`<div>${audioInputFormat.state}</div>`
-      : '';
+      : nothing;
   }
 
   private showShuffle() {
@@ -121,6 +123,22 @@ class PlayerControls extends LitElement {
         align-items: center;
       }
 
+      .audio-input-format {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        > div {
+          max-width: 100%;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          font-size: smaller;
+          line-height: normal;
+        }
+      }
+
       .volume-controls {
         display: flex;
         align-items: center;
@@ -130,40 +148,13 @@ class PlayerControls extends LitElement {
         }
       }
 
-      *[hide] {
+      *[hide='true'] {
         display: none;
       }
 
       .big-icon {
         --mdc-icon-button-size: 5rem;
         --mdc-icon-size: 5rem;
-      }
-
-      .audio-input-format {
-        flex: 1 0 0;
-        margin-bottom: 10px;
-        text-align: center;
-        align-self: stretch;
-        position: relative;
-      }
-
-      .audio-input-format > div {
-        color: var(--card-background-color);
-        background: var(--disabled-text-color);
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        max-width: 100%;
-        font-size: smaller;
-        line-height: normal;
-        padding: 3px;
-      }
-
-      .flex-1 {
-        flex: 1;
       }
     `;
   }

@@ -30,9 +30,7 @@ class PlayerControls extends LitElement {
     const pauseOrStop = this.config.stopInsteadOfPause ? STOP : PAUSE;
     return html`
       <div class="main" id="mediaControls">
-        <div class="audio-input-format" hide=${!this.config.showAudioInputFormat}>
-          ${until(this.getAudioInputFormat())}
-        </div>
+        <div class="audio-input-format">${this.config.showAudioInputFormat ? until(this.getAudioInputFormat()) : nothing}</div>
         <div class="icons">
               <sonos-ha-player .store=${this.store} .features=${this.showShuffle()}></sonos-ha-player>
               <sonos-ha-player .store=${this.store} .features=${this.showPrev()}></sonos-ha-player>
@@ -148,7 +146,7 @@ class PlayerControls extends LitElement {
         }
       }
 
-      *[hide='true'] {
+      *[hide] {
         display: none;
       }
 

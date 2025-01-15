@@ -1,48 +1,71 @@
-import { css, html, LitElement } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { css, html, LitElement, nothing } from 'lit';
+import { property, query, state } from 'lit/decorators.js';
 import Store from '../model/store';
 import { MediaPlayer } from '../model/media-player';
-import { mdiAlarm, mdiCheckCircle, mdiCloseCircle } from '@mdi/js';
+import { mdiCheckCircle, mdiCloseCircle } from '@mdi/js';
 
 export class SleepTimer extends LitElement {
   @property({ attribute: false }) store!: Store;
   @property({ attribute: false }) player!: MediaPlayer;
   @query('#sleepTimerInput') private sleepTimer!: HTMLInputElement;
+  @state() private sleepTimerActive = false;
 
   render() {
-    const hassService = this.store.hassService;
     if (this.player.attributes.platform !== 'sonos') {
-      return html``;
+      return nothing;
     }
     return html`
       <div id="sleepTimer">
-        <ha-icon-button id="sleepTimerAlarm" .path=${mdiAlarm}></ha-icon-button>
-        <label for="sleepTimer">Sleep Timer (s)</label>
-        <input type="number" id="sleepTimerInput" min="0" max="7200" value="300" />
-        <ha-icon-button
-          id="sleepTimerSubmit"
-          .path=${mdiCheckCircle}
-          @click=${() => hassService.setSleepTimer(this.player, this.sleepTimer.valueAsNumber)}
-        ></ha-icon-button>
-        <ha-icon-button
-          id="sleepTimerCancel"
-          .path=${mdiCloseCircle}
-          @click=${() => hassService.cancelSleepTimer(this.player)}
-        ></ha-icon-button>
+        <ha-icon id="sleepTimerClock" .icon=${'mdi:bed-clock'} class=${this.sleepTimerActive ? 'active' : ''}></ha-icon>
+        <label for="sleepTimer">Sleep Timer (min)</label>
+        <input type="number" id="sleepTimerInput" min="0" max="720" value="15" />
+        <ha-icon-button id="sleepTimerSubmit" .path=${mdiCheckCircle} @click=${this.setSleepTimer}></ha-icon-button>
+        <ha-icon-button id="sleepTimerCancel" .path=${mdiCloseCircle} @click=${this.cancelSleepTimer}></ha-icon-button>
       </div>
     `;
+  }
+
+  private setSleepTimer() {
+    const hassService = this.store.hassService;
+    hassService.setSleepTimer(this.player, this.sleepTimer.valueAsNumber);
+    this.sleepTimerActive = true;
+  }
+
+  private cancelSleepTimer() {
+    const hassService = this.store.hassService;
+    hassService.cancelSleepTimer(this.player);
+    this.sleepTimerActive = false;
   }
 
   static get styles() {
     return css`
       #sleepTimer {
         display: flex;
-        color: var(--primary-text-color);
+        align-items: center;
         gap: 7px;
+        color: var(--primary-text-color);
       }
 
-      #sleepTimerAlarm {
+      #sleepTimer > label {
+        align-content: center;
+        flex: 2;
+      }
+
+      #sleepTimerClock {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
         color: var(--paper-item-icon-color);
+
+        &.active {
+          color: var(--accent-color);
+        }
+      }
+
+      #sleepTimerInput {
+        padding: 5px;
       }
 
       #sleepTimerSubmit {
@@ -51,11 +74,6 @@ export class SleepTimer extends LitElement {
 
       #sleepTimerCancel {
         color: var(--secondary-text-color);
-      }
-
-      #sleepTimer > label {
-        align-content: center;
-        flex: 2;
       }
     `;
   }

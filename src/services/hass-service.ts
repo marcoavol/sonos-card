@@ -119,7 +119,7 @@ export default class HassService {
   async setSleepTimer(mediaPlayer: MediaPlayer, sleepTimer: number) {
     await this.hass.callService('sonos', 'set_sleep_timer', {
       entity_id: mediaPlayer.id,
-      sleep_time: sleepTimer,
+      sleep_time: sleepTimer * 60,
     });
   }
 

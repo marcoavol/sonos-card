@@ -49,6 +49,10 @@ export class SleepTimer extends LitElement {
         color: var(--accent-color);
       }
 
+      #sleepTimerCancel {
+        color: var(--secondary-text-color);
+      }
+
       #sleepTimer > label {
         align-content: center;
         flex: 2;

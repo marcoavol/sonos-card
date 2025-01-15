@@ -423,6 +423,7 @@ export class Grouping extends LitElement {
           padding: 0.5rem 0.5rem 0 0;
           --mdc-theme-primary: var(--primary-color);
           --state-switch-active-color: var(--accent-color) !important;
+          --state-binary_sensor-active-color: var(--accent-color) !important;
         }
 
         .buttons {

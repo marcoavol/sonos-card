@@ -259,6 +259,9 @@ export class Card extends LitElement {
     if (newConfig.hideVolumeCogwheel) {
       newConfig.hideSpeakerConfigButton = newConfig.hideVolumeCogwheel;
     }
+    if (newConfig.mediaBrowserTitleButton) {
+      newConfig.mediaBrowserHeaderButtons = [newConfig.mediaBrowserTitleButton];
+    }
     this.config = newConfig;
   }
 

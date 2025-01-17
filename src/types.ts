@@ -100,7 +100,7 @@ export interface CardConfig extends LovelaceCardConfig {
   mediaTitleReplacement?: string;
   stopInsteadOfPause?: boolean;
   inverseGroupMuteState?: boolean;
-  mediaBrowserTitleButton?: MediaBrowserTitleButtonConfig;
+  mediaBrowserHeaderButtons?: MediaBrowserHeaderButtonConfig[];
 }
 
 export interface MediaArtworkOverride {
@@ -202,7 +202,7 @@ export interface QueueItem {
   media_content_id: string;
 }
 
-export interface MediaBrowserTitleButtonConfig {
+export interface MediaBrowserHeaderButtonConfig {
   icon?: string;
   text?: string;
   tap_action?: ActionConfig;

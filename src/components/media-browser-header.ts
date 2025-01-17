@@ -1,43 +1,39 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { MediaPlayerEntityFeature } from '../types';
+import { MediaPlayerEntityFeature, MediaBrowserHeaderButtonConfig } from '../types';
 import Store from '../model/store';
-import { handleAction } from 'custom-card-helpers';
+import { ActionConfig, handleAction } from 'custom-card-helpers';
 
 class MediaBrowserHeader extends LitElement {
   @property({ attribute: false }) store!: Store;
 
   render() {
-    const titleButtonConfig = this.store.config.mediaBrowserTitleButton;
+    const buttonConfigs: MediaBrowserHeaderButtonConfig[] = this.store.config.mediaBrowserHeaderButtons || [];
     return html`
-      ${titleButtonConfig
-        ? html`
+      <div class="buttons">
+        ${buttonConfigs.map(
+          (button) => html`
             <ha-control-button
-              class="title ${this.store.config.hideBrowseMediaButton ? 'center' : ''} ${!titleButtonConfig.tap_action ||
-              titleButtonConfig.tap_action.action === 'none'
-                ? 'text-only'
-                : ''}"
-              @mouseup=${this._handleAction}
-              @touchend=${this._handleAction}
+              class="button ${!button.tap_action || button.tap_action.action === 'none' ? 'text-only' : ''}"
+              @mouseup=${() => this._handleAction(button.tap_action)}
+              @touchend=${() => this._handleAction(button.tap_action)}
             >
-              ${titleButtonConfig.icon ? html`<ha-icon .icon=${titleButtonConfig.icon}></ha-icon>` : nothing}
-              ${titleButtonConfig.text || 'Favorites'}
+              ${button.icon ? html`<ha-icon .icon=${button.icon}></ha-icon>` : nothing} ${button.text}
             </ha-control-button>
-          `
-        : nothing}
-      <sonos-ha-player
-        hide=${this.store.config.hideBrowseMediaButton || nothing}
-        .store=${this.store}
-        .features=${[MediaPlayerEntityFeature.BROWSE_MEDIA]}
-      ></sonos-ha-player>
+          `,
+        )}
+        <sonos-ha-player
+          hide=${this.store.config.hideBrowseMediaButton || nothing}
+          .store=${this.store}
+          .features=${[MediaPlayerEntityFeature.BROWSE_MEDIA]}
+        ></sonos-ha-player>
+      </div>
     `;
   }
 
-  private _handleAction(e: UIEvent): void {
-    e.preventDefault();
-    const titleButtonConfig = this.store.config.mediaBrowserTitleButton;
-    if (titleButtonConfig?.tap_action) {
-      handleAction(this, this.store.hass, { tap_action: titleButtonConfig.tap_action }, 'tap');
+  private _handleAction(tapAction?: ActionConfig): void {
+    if (tapAction) {
+      handleAction(this, this.store.hass, { tap_action: tapAction }, 'tap');
     }
   }
 
@@ -49,27 +45,39 @@ class MediaBrowserHeader extends LitElement {
         align-items: center;
       }
 
-      .title {
+      .buttons {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .button {
         display: flex;
         align-items: center;
         width: auto;
-        font-size: 1.1rem;
-        font-weight: bold;
+        height: 36px;
         padding: 0;
+        font-family: var(
+          --mdc-typography-button-font-family,
+          var(--mdc-typography-font-family, Roboto, sans-serif)
+        ) !important;
+        font-size: var(--mdc-typography-button-font-size, 0.875rem) !important;
+        font-weight: var(--mdc-typography-button-font-weight, 500) !important;
+        letter-spacing: var(--mdc-typography-button-letter-spacing, 0.0892857143em) !important;
+        --control-button-padding: 0 8px;
         --control-button-background-color: unset;
         --control-button-border-radius: 4px;
         --control-button-icon-color: var(--secondary-text-color);
+
         ha-icon {
           margin-right: 6px;
         }
       }
 
-      .title.center {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .title.text-only {
+      .button.text-only {
         pointer-events: none;
         touch-action: none;
       }

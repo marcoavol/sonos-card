@@ -180,7 +180,7 @@ class AdvancedEditor extends BaseEditor {
           <li>favoritesToIgnore</li>
           <li>groupingButtonIcons</li>
           <li>sectionButtonIcons</li>
-          <li>mediaBrowserTitleButton</li>
+          <li>mediaBrowserHeaderButtons</li>
         </ul>
       </div>
     `;

@@ -27,7 +27,14 @@ Do you like the Sonos Card? Support the original project by [punxaphil](https://
 ## Changes
 
 * Fixed a bug where un-/grouping of media players was not working when the active player was deselected at the same time
-* Added an option to configure the title of the media browse section as a button that takes a tap action (for example to open Sonos app on mobile)
+* Added an option to configure custom header buttons for the media browser section that take a tap action (for example to open Sonos app on mobile) like:
+  ```yaml
+  mediaBrowserHeaderButtons:
+    - icon: 'mdi:music'
+      tap_action:
+        action: url
+        url_path: 'sonos://'
+  ```
 * Fixed minor spacing and layout issues
 * Integrated volumes section into grouping section
 * ...

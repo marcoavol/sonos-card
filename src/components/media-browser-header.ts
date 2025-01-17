@@ -48,18 +48,20 @@ class MediaBrowserHeader extends LitElement {
       .buttons {
         width: 100%;
         display: flex;
-        align-items: center;
-        gap: 0.5rem;
         justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
         flex-wrap: wrap;
       }
 
       .button {
         display: flex;
         align-items: center;
+        flex-grow: 1;
         width: auto;
         height: 36px;
         padding: 0;
+        white-space: nowrap;
         font-family: var(
           --mdc-typography-button-font-family,
           var(--mdc-typography-font-family, Roboto, sans-serif)

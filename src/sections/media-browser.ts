@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import '../components/media-browser-list';
 import '../components/media-browser-icons';
@@ -27,8 +27,9 @@ export class MediaBrowser extends LitElement {
     this.mediaControlService = this.store.mediaControlService;
 
     return html`
-      <sonos-media-browser-header .store=${this.store}></sonos-media-browser-header>
-
+      ${this.config.mediaBrowserHeaderButtons?.length || !this.store.config.hideBrowseMediaButton
+        ? html`<sonos-media-browser-header .store=${this.store}></sonos-media-browser-header>`
+        : nothing}
       ${this.activePlayer &&
       until(
         this.getFavorites(this.activePlayer)

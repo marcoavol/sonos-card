@@ -33,7 +33,11 @@ class Group extends LitElement {
         @click=${() => this.handleGroupClicked()}
       >
         <div class="row">
-          <ha-icon .icon=${this.player.members.length > 1 ? 'mdi:speaker-multiple' : 'mdi:speaker'}></ha-icon>
+          <ha-icon
+            .icon=${this.player.members.length > 1
+              ? 'mdi:speaker-multiple'
+              : this.player.attributes.icon || 'mdi:speaker'}
+          ></ha-icon>
           <div class="text">
             <span class="speakers">${speakerList}</span>
             <span class="song-title">${currentTrack}</span>

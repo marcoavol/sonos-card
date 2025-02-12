@@ -13,7 +13,7 @@ class Volume extends LitElement {
   @property({ attribute: false }) player!: MediaPlayer;
   @property({ type: Boolean }) updateMembers = true;
   @property() volumeClicked?: () => void;
-  @property() slim: boolean = false;
+  @property({ type: Boolean }) slim = false;
 
   render() {
     this.config = this.store.config;

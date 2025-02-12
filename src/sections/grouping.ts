@@ -64,7 +64,7 @@ export class Grouping extends LitElement {
                   selected=${item.isSelected || nothing}
                   grouping-in-progress=${this.isGroupingInProgress || nothing}
                 >
-                  <ha-icon class="speaker" .icon="mdi:${item.player.attributes.icon || 'speaker'}"></ha-icon>
+                  <ha-icon class="speaker" .icon="${item.player.attributes.icon || 'mdi:speaker'}"></ha-icon>
                   <div class="name-and-volume">
                     <div class="name-and-chevron" @click=${() => this.toggleShowSwitches(item.player)}>
                       <div class="name">${item.name}</div>
@@ -334,10 +334,6 @@ export class Grouping extends LitElement {
           padding: 0.75rem 0.5rem;
         }
 
-        .item-and-switches:first-child {
-          padding-top: 1rem;
-        }
-
         .item-and-switches:not(:first-child) {
           border-top: solid var(--secondary-background-color) !important;
         }
@@ -406,7 +402,8 @@ export class Grouping extends LitElement {
         }
 
         .speaker {
-          --mdc-icon-size: 3.75rem;
+          --mdc-icon-size: 3rem;
+          padding: 0 0.25rem;
         }
 
         .select {

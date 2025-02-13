@@ -387,6 +387,7 @@ export class Grouping extends LitElement {
           font-weight: bold;
           font-size: 1.1rem;
           text-align: left;
+          padding-left: calc((var(--mdc-icon-button-size, 48px) - var(--mdc-icon-size, 24px)) / 2);
         }
 
         .volume {

@@ -61,6 +61,10 @@ export const ADVANCED_SCHEMA = [
     selector: { boolean: {} },
   },
   {
+    name: 'favoritesShowMetadata',
+    selector: { boolean: {} },
+  },
+  {
     name: 'topFavorites',
     type: 'string',
   },

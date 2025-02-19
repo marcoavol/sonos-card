@@ -20,7 +20,11 @@ export class MediaBrowserIcons extends LitElement {
         ${itemsWithFallbacks(this.items, this.config).map(
           (item) => html`
             <ha-control-button @click=${() => this.dispatchEvent(customEvent(MEDIA_ITEM_SELECTED, item))}>
-              ${renderMediaBrowserItem(item, !item.thumbnail || !this.config.favoritesHideTitleForThumbnailIcons)}
+              ${renderMediaBrowserItem(
+                item,
+                !item.thumbnail || !this.config.favoritesHideTitleForThumbnailIcons,
+                this.config.favoritesShowMetadata,
+              )}
             </ha-control-button>
           `,
         )}
@@ -61,6 +65,20 @@ export class MediaBrowserIcons extends LitElement {
           line-height: 160%;
           bottom: 0;
           background-color: rgba(var(--rgb-card-background-color), 0.733);
+          padding: 0.25rem;
+          box-sizing: border-box;
+        }
+
+        .metadata {
+          font-size: 0.7rem;
+          color: var(--secondary-text-color);
+        }
+
+        .content-id,
+        .content-type {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       `,
     ];

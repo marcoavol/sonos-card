@@ -37,4 +37,5 @@ Do you like the Sonos Card? Support the original project by [punxaphil](https://
   ```
 * Fixed minor spacing and layout issues
 * Integrated volumes section into grouping section
+* Added a config option to show metadata (media_content_id and media_content_type) in favorites
 * ...
